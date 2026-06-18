@@ -35,25 +35,18 @@ function MobileMenu({ nav, current, onNav, onClose }) {
 }
 
 function Header({ nav, current, onNav, cartCount, onSearch }) {
-  const [scrolled, setScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  React.useEffect(() => {
-    const el = document.querySelector('[data-scrollroot]') || window;
-    const onScroll = () => setScrolled((el.scrollTop || window.scrollY || 0) > 8);
-    el.addEventListener('scroll', onScroll);
-    return () => el.removeEventListener('scroll', onScroll);
-  }, []);
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50 }}>
       <TopBar />
-      <div style={{ background: scrolled ? 'rgba(14,16,20,0.85)' : 'var(--bg-page)', backdropFilter: 'blur(14px)', borderBottom: '1px solid var(--border-subtle)', transition: 'background var(--dur-base)' }}>
-        <div className="rc-container" style={{ height: scrolled ? 56 : 64, display: 'flex', alignItems: 'center', gap: 16, transition: 'height var(--dur-base) var(--ease-out)' }}>
+      <div style={{ background: 'rgba(14,16,20,0.92)', backdropFilter: 'blur(14px)', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div className="rc-container" style={{ height: 60, display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* Mobile hamburger */}
           <button className="rc-show-md" onClick={() => setMenuOpen(true)}
             style={{ background: 'none', border: 'none', padding: 4, color: 'var(--text-strong)', display: 'none' }}>
             <Icon name="menu" size={24} />
           </button>
-          <button onClick={() => onNav('home')} style={{ background: 'none', border: 'none', padding: 0 }}><Logo size={scrolled ? 22 : 26} /></button>
+          <button onClick={() => onNav('home')} style={{ background: 'none', border: 'none', padding: 0 }}><Logo size={24} /></button>
           <nav className="rc-hide-md" style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
             {nav.map((n) => {
               const isBuilder = n.id === 'builder';
