@@ -52,3 +52,9 @@ export const upload = (file: File) => {
 };
 export const batchSettings = (data: Record<string, string>) =>
   client.post('/admin/settings/batch', data);
+
+// Profile
+export const updateProfile = (data: { name?: string; email?: string }) =>
+  client.put('/admin/profile', data);
+export const changePassword = (data: { current_password: string; new_password: string; new_password_confirmation: string }) =>
+  client.put('/admin/password', data);

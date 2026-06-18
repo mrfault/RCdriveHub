@@ -5,7 +5,7 @@ import {
   DashboardOutlined, ShoppingOutlined, ToolOutlined, TagsOutlined,
   AppstoreOutlined, ShoppingCartOutlined, BuildOutlined, MenuOutlined,
   PictureOutlined, BlockOutlined, SafetyOutlined, SettingOutlined, LogoutOutlined,
-  SunOutlined, MoonOutlined,
+  SunOutlined, MoonOutlined, TeamOutlined,
 } from '@ant-design/icons';
 import { getMe, logout as apiLogout } from '../api/client';
 import { useTheme } from '../App';
@@ -27,6 +27,7 @@ const menuItems = [
   { key: '/footer-groups', icon: <BlockOutlined />, label: 'Footer' },
   { key: '/reassurance-items', icon: <SafetyOutlined />, label: 'Etibar Zolağı' },
   { key: '/settings', icon: <SettingOutlined />, label: 'Tənzimləmələr' },
+  { key: '/users', icon: <TeamOutlined />, label: 'İstifadəçilər' },
 ];
 
 export default function AdminLayout() {

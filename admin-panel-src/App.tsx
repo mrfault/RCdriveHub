@@ -6,6 +6,7 @@ import AdminLayout from './pages/AdminLayout';
 import DashboardPage from './pages/DashboardPage';
 import CrudPage from './pages/CrudPage';
 import SettingsPage from './pages/SettingsPage';
+import UsersPage from './pages/UsersPage';
 
 const isAuth = () => !!localStorage.getItem('rc_token');
 
@@ -52,6 +53,7 @@ export default function App() {
               <Route path="footer-groups" element={<CrudPage resource="footer-groups" title="Footer" />} />
               <Route path="reassurance-items" element={<CrudPage resource="reassurance-items" title="Etibar Zolağı" />} />
               <Route path="settings" element={<SettingsPage />} />
+            <Route path="users" element={<UsersPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
