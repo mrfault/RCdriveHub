@@ -106,7 +106,9 @@ export default function App() {
   const data = RCDATA;
   const [view, setView] = useState('home');
   const [product, setProduct] = useState(data.products[0]);
-  const [cart, setCart] = useState(0);
+  const [cartItems, setCartItems] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('rc_cart') || '[]'); } catch { return []; }
+  });
   const [toast, setToast] = useState(null);
   const [lightbox, setLightbox] = useState(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
@@ -124,6 +126,11 @@ export default function App() {
     audioRef.current = a;
     return () => { a.pause(); };
   }, []);
+
+  // Persist cart to localStorage
+  useEffect(() => {
+    localStorage.setItem('rc_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   // Toast cleanup on unmount
   useEffect(() => {
@@ -144,7 +151,11 @@ export default function App() {
   const closeLightbox = useCallback(() => setLightbox(null), []);
 
   const addToCart = useCallback((item, qty = 1) => {
-    setCart(c => c + qty);
+    setCartItems(prev => {
+      const existing = prev.find(c => c.id === item.id);
+      if (existing) return prev.map(c => c.id === item.id ? { ...c, qty: c.qty + qty } : c);
+      return [...prev, { ...item, qty }];
+    });
     setToast(item);
     clearTimeout(tRef.current);
     tRef.current = setTimeout(() => setToast(null), 2600);
@@ -167,7 +178,7 @@ export default function App() {
       <AppContext.Provider value={appCtx}>
         {showSplash && <SplashScreen onEnter={enterSite} />}
         <a href="#main-content" className="rc-skip-nav">Məzmuna keç</a>
-        <Header nav={NAV} current={view} onNav={go} cartCount={cart} onSearch={() => go('catalog')} />
+        <Header nav={NAV} current={view} onNav={go} cartCount={cartItems.reduce((s, c) => s + c.qty, 0)} onSearch={() => go('catalog')} />
         <main id="main-content">
           <Suspense fallback={<Loading />}>
             {view === 'home' && <HomeView data={data} onNav={go} onAdd={addToCart} />}
@@ -179,7 +190,7 @@ export default function App() {
                 {view === 'catalog' && <CatalogView data={data} onOpen={openProduct} onAdd={addToCart} />}
                 {view === 'sale' && <SaleView data={data} onOpen={openProduct} onAdd={addToCart} />}
                 {view === 'product' && <ProductView product={product} related={relatedProducts} onAdd={addToCart} onBack={() => go('catalog')} />}
-                {view === 'cart' && <CartView data={data} onNav={go} />}
+                {view === 'cart' && <CartView data={data} onNav={go} cartItems={cartItems} setCartItems={setCartItems} />}
                 {view === 'favorites' && <FavoritesView data={data} onOpen={openProduct} onAdd={addToCart} onNav={go} />}
                 {view === 'account' && <AccountView onNav={go} />}
               </div>

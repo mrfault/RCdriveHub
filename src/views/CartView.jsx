@@ -24,19 +24,15 @@ function CartRow({ item, onQty, onRemove }) {
   );
 }
 
-export default function CartView({ data, onNav }) {
-  const [lines, setLines] = React.useState(() => [
-    { ...data.products[0], qty: 1 },
-    { ...data.products[4], qty: 1 },
-    { ...data.parts[1], qty: 2 },
-  ]);
+export default function CartView({ data, onNav, cartItems, setCartItems }) {
+  const lines = cartItems || [];
   const num = (s) => parseFloat(String(s).replace(/[^\d,]/g, '').replace(',', '.')) || 0;
   const fmt = (n) => n.toFixed(2).replace('.', ',') + ' ₼';
   const subtotal = lines.reduce((a, l) => a + num(l.price) * l.qty, 0);
   const shipping = subtotal > 120 || subtotal === 0 ? 0 : 9.9;
   const total = subtotal + shipping;
-  const setQty = (i, q) => setLines(ls => ls.map((l, idx) => idx === i ? { ...l, qty: q } : l));
-  const remove = (i) => setLines(ls => ls.filter((_, idx) => idx !== i));
+  const setQty = (i, q) => setCartItems(ls => ls.map((l, idx) => idx === i ? { ...l, qty: q } : l));
+  const remove = (i) => setCartItems(ls => ls.filter((_, idx) => idx !== i));
 
   return (
     <div className="rc-container" style={{ padding: '28px 0 0' }}>

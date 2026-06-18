@@ -302,6 +302,42 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   font-variant-numeric: tabular-nums;
 }
 
+/* Utility classes — replace most common inline styles */
+.rc-flex { display: flex; }
+.rc-flex-col { display: flex; flex-direction: column; }
+.rc-flex-center { display: flex; align-items: center; justify-content: center; }
+.rc-flex-between { display: flex; align-items: center; justify-content: space-between; }
+.rc-flex-wrap { flex-wrap: wrap; }
+.rc-grid { display: grid; }
+.rc-gap-4 { gap: 4px; }
+.rc-gap-8 { gap: 8px; }
+.rc-gap-10 { gap: 10px; }
+.rc-gap-12 { gap: 12px; }
+.rc-gap-14 { gap: 14px; }
+.rc-gap-16 { gap: 16px; }
+.rc-gap-18 { gap: 18px; }
+.rc-gap-24 { gap: 24px; }
+.rc-gap-32 { gap: 32px; }
+.rc-text-strong { color: var(--text-strong); }
+.rc-text-body { color: var(--text-body); }
+.rc-text-muted { color: var(--text-muted); }
+.rc-text-faint { color: var(--text-faint); }
+.rc-text-flame { color: var(--flame-500); }
+.rc-font-mono { font-family: var(--font-mono); }
+.rc-font-display { font-family: var(--font-display); font-style: italic; font-weight: 900; text-transform: uppercase; }
+.rc-fw-700 { font-weight: 700; }
+.rc-surface-card { background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); }
+.rc-surface-raised { background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); }
+.rc-btn-reset { background: none; border: none; padding: 0; cursor: pointer; font: inherit; color: inherit; }
+.rc-section-title { font-family: var(--font-display); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: clamp(2rem, 4vw, 3rem); line-height: 0.95; letter-spacing: -0.02em; color: var(--text-strong); }
+.rc-hero-title { font-family: var(--font-display); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: clamp(2.4rem, 5.5vw, 4.5rem); line-height: 0.88; letter-spacing: -0.02em; color: var(--text-strong); }
+.rc-product-grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(228px, 1fr)); gap: 18px; }
+.rc-part-grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.rc-hover-lift { transition: transform var(--dur-base) var(--ease-power), border-color var(--dur-base); }
+.rc-hover-lift:hover { transform: translateY(-3px); border-color: var(--border-flame); }
+.rc-mono-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); }
+.rc-mono-sm { font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.1em; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
