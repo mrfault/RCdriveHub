@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { RCDATA, RCIMG } from './data.js';
 import { Icon, Lightbox, Logo } from './components/index.jsx';
 import { Header, Footer } from './components/chrome.jsx';
@@ -42,7 +42,7 @@ class ErrorBoundary extends React.Component {
 
 function SplashScreen({ onEnter }) {
   return (
-    <div onClick={onEnter} style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'var(--carbon-950)', display: 'flex', flexDirection: 'column', cursor: 'pointer', animation: 'rc-rise 500ms var(--ease-power) both' }}>
+    <div role="button" tabIndex={0} onClick={onEnter} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onEnter(); }} style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'var(--carbon-950)', display: 'flex', flexDirection: 'column', cursor: 'pointer', animation: 'rc-rise 500ms var(--ease-power) both', outline: 'none' }}>
       <div style={{ padding: '24px 0 0' }} className="rc-container"><Logo size={28} /></div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 900, textTransform: 'uppercase', fontSize: 'clamp(2.5rem,6vw,4.5rem)', lineHeight: 0.9, color: 'var(--text-strong)', textAlign: 'center' }}>
@@ -159,7 +159,8 @@ export default function App() {
     if (a) a.play().then(() => setMusicPlaying(true)).catch(() => {});
   }, []);
 
-  const appCtx = { musicPlaying, toggleMusic, openLightbox };
+  const relatedProducts = useMemo(() => [...data.products, ...data.parts], [data]);
+  const appCtx = useMemo(() => ({ musicPlaying, toggleMusic, openLightbox }), [musicPlaying, toggleMusic, openLightbox]);
 
   return (
     <ErrorBoundary>
@@ -177,7 +178,7 @@ export default function App() {
               <div className="rc-light" style={{ background: 'var(--bg-page)', minHeight: '72vh', paddingBottom: 56 }}>
                 {view === 'catalog' && <CatalogView data={data} onOpen={openProduct} onAdd={addToCart} />}
                 {view === 'sale' && <SaleView data={data} onOpen={openProduct} onAdd={addToCart} />}
-                {view === 'product' && <ProductView product={product} related={[...data.products, ...data.parts]} onAdd={addToCart} onBack={() => go('catalog')} />}
+                {view === 'product' && <ProductView product={product} related={relatedProducts} onAdd={addToCart} onBack={() => go('catalog')} />}
                 {view === 'cart' && <CartView data={data} onNav={go} />}
                 {view === 'favorites' && <FavoritesView data={data} onOpen={openProduct} onAdd={addToCart} onNav={go} />}
                 {view === 'account' && <AccountView onNav={go} />}

@@ -3,7 +3,7 @@ import { Icon, ProductCard, Button, Badge } from "../components/index.jsx";
 
 
 export default function FavoritesView({ data, onOpen, onAdd, onNav }) {
-  const [favs, setFavs] = React.useState(() => [1, 2, 3, 5, 6].map(i => data.products[i]));
+  const [favs, setFavs] = React.useState(() => [1, 2, 3, 5, 6].map(i => data.products[i]).filter(Boolean));
   const remove = (id) => setFavs(f => f.filter(p => p.id !== id));
 
   return (

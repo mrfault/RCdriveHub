@@ -19,7 +19,7 @@ export function TopBar() {
 
 export function MobileMenu({ nav, current, onNav, onClose }) {
   return (
-    <div className="rc-mobile-menu" onClick={onClose}>
+    <div role="dialog" aria-modal="true" aria-label="Menyu" className="rc-mobile-menu" onClick={onClose} onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}>
       <button type="button" onClick={(e) => { e.stopPropagation(); onClose(); }} style={{ position: 'absolute', top: 20, right: 20, width: 44, height: 44, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'var(--surface-raised)', border: '1px solid var(--border-subtle)', color: 'var(--text-strong)', fontSize: 0, padding: 0 }}>
         <Icon name="x" size={22} />
       </button>

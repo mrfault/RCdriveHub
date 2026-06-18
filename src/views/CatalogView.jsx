@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, ProductCard, FilterChip, Badge, Button } from "../components/index.jsx";
+import { Icon, ProductCard, FilterChip, Button } from "../components/index.jsx";
 
 
 function FacetGroup({ title, children }) {

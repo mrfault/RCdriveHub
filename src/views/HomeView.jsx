@@ -26,7 +26,7 @@ function SpeedLines() {
   );
 }
 
-const HERO_VIDEOS = ['assets/hero1.mp4', 'assets/hero2.mp4'];
+const HERO_VIDEOS = ['/assets/hero1.mp4', '/assets/hero2.mp4'];
 
 function HeroMedia() {
   const isDesktop = window.innerWidth > 768;

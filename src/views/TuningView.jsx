@@ -2,6 +2,7 @@ import React from "react";
 import { Icon, Button, Badge, FilterChip, SearchBar } from "../components/index.jsx";
 import { SectionHead } from "./HomeView.jsx";
 import { RCIMG } from "../data.js";
+import { useApp } from "../AppContext.jsx";
 
 
 function TuningCategoryCard({ cat, onClick }) {
@@ -19,11 +20,12 @@ function TuningCategoryCard({ cat, onClick }) {
 }
 
 function TuningPartRow({ pt, onAdd }) {
+  const { openLightbox } = useApp();
   return (
     <div style={{ display: 'flex', gap: 14, padding: 16, background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', transition: 'border-color var(--dur-base), transform var(--dur-base)' }}
       onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--border-flame)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
       onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.transform = 'none'; }}>
-      <div onClick={() => { if (pt.image && window._openLightbox) window._openLightbox([pt.image], 0); }}
+      <div onClick={() => { if (pt.image) openLightbox([pt.image], 0); }}
         style={{ position: 'relative', width: 88, height: 88, borderRadius: 'var(--radius-md)', background: 'linear-gradient(180deg,#1c212c,#0c0e13)', display: 'grid', placeItems: 'center', flex: 'none', overflow: 'hidden', cursor: pt.image ? 'zoom-in' : 'default' }}>
         {pt.image
           ? <img src={pt.image} alt={pt.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

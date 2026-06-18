@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Button, Badge, FilterChip, SearchBar } from "../components/index.jsx";
+import { Icon, Button, Badge } from "../components/index.jsx";
 import { SectionHead } from "./HomeView.jsx";
 import { RCIMG } from "../data.js";
 
@@ -15,10 +15,10 @@ const BUILDER_STEPS = [
 
 const BUILDER_OPTIONS = {
   base: [
-    { id: 'b1', name: 'Monster Truck Şassi', desc: '1/8 miqyas · alüminium · 4WD', price: 289, image: window.RCIMG.heroAction2 },
-    { id: 'b2', name: 'Buggy Şassi', desc: '1/8 miqyas · karbon · 4WD', price: 345, image: window.RCIMG.heroAction },
-    { id: 'b3', name: 'Crawler Şassi', desc: '1/10 miqyas · çelik · portal ox', price: 265, image: window.RCIMG.demo },
-    { id: 'b4', name: 'On-Road Şassi', desc: '1/10 miqyas · alüminium · RWD', price: 215, image: window.RCIMG.heroAction2 },
+    { id: 'b1', name: 'Monster Truck Şassi', desc: '1/8 miqyas · alüminium · 4WD', price: 289, image: RCIMG.heroAction2 },
+    { id: 'b2', name: 'Buggy Şassi', desc: '1/8 miqyas · karbon · 4WD', price: 345, image: RCIMG.heroAction },
+    { id: 'b3', name: 'Crawler Şassi', desc: '1/10 miqyas · çelik · portal ox', price: 265, image: RCIMG.demo },
+    { id: 'b4', name: 'On-Road Şassi', desc: '1/10 miqyas · alüminium · RWD', price: 215, image: RCIMG.heroAction2 },
   ],
   motor: [
     { id: 'm1', name: 'Brushless 2200KV', desc: 'Sensorlu · 4-pol · 6S uyğun', price: 189 },
