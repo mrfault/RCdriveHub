@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Card, Form, Input, InputNumber, Button, Typography, message, Tabs, Spin } from 'antd';
-import { SaveOutlined } from '@ant-design/icons';
-import { list, batchSettings } from '../api/client';
+import { Card, Form, Input, InputNumber, Button, Typography, message, Tabs, Spin, Upload, Image, Space } from 'antd';
+import { SaveOutlined, UploadOutlined } from '@ant-design/icons';
+import { list, batchSettings, upload as apiUpload } from '../api/client';
 
 interface Setting {
   id: number;
@@ -29,9 +29,39 @@ const settingLabels: Record<string, string> = {
   topbar_right2: 'Üst bar sağ yazı 2',
   free_shipping_threshold: 'Pulsuz çatdırılma həddi (₼)',
   music_volume: 'Musiqi səs səviyyəsi (0-1)',
+  watermark_logo: 'Watermark logo (şəkillərin sağ alt küncünə qoyulur)',
   footer_copyright: 'Footer müəllif hüququ',
   footer_company: 'Footer şirkət adı',
 };
+
+function FileSettingField({ value, onChange }: { value?: string; onChange?: (v: string) => void }) {
+  const [preview, setPreview] = useState(value || '');
+  const [uploading, setUploading] = useState(false);
+  useEffect(() => { setPreview(value || ''); }, [value]);
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const { data } = await apiUpload(file);
+      const url = data.url?.startsWith('http') ? data.url : `https://rchub.023.az${data.url}`;
+      onChange?.(url);
+      setPreview(url);
+      message.success('Fayl yükləndi');
+    } catch { message.error('Yükləmə xətası'); }
+    setUploading(false);
+    return false;
+  };
+  return (
+    <Space direction="vertical" style={{ width: '100%' }}>
+      <Space>
+        <Upload showUploadList={false} beforeUpload={(f) => { handleUpload(f); return false; }} accept="image/*">
+          <Button icon={<UploadOutlined />} loading={uploading}>Fayl yüklə</Button>
+        </Upload>
+        <Input value={preview} onChange={(e) => { setPreview(e.target.value); onChange?.(e.target.value); }} placeholder="və ya URL" style={{ width: 300 }} />
+      </Space>
+      {preview && <Image src={preview} alt="" style={{ maxHeight: 80, borderRadius: 4 }} />}
+    </Space>
+  );
+}
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<Setting[]>([]);
@@ -92,7 +122,7 @@ export default function SettingsPage() {
               <Card>
                 {settings.filter(s => s.group === g).map(s => (
                   <Form.Item key={s.key} name={s.key} label={settingLabels[s.key] || s.label || s.key}>
-                    {s.type === 'number' ? <InputNumber style={{ width: '100%' }} /> : <Input />}
+                    {s.type === 'file' ? <FileSettingField /> : s.type === 'number' ? <InputNumber style={{ width: '100%' }} /> : <Input />}
                   </Form.Item>
                 ))}
               </Card>

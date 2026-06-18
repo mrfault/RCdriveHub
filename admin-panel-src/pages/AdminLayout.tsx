@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Button, Typography, Avatar, Switch, theme } from 'antd';
+import { Layout, Menu, Button, Typography, Avatar, Switch } from 'antd';
 import {
   DashboardOutlined, ShoppingOutlined, ToolOutlined, TagsOutlined,
   AppstoreOutlined, ShoppingCartOutlined, BuildOutlined, MenuOutlined,
@@ -11,7 +11,6 @@ import { getMe, logout as apiLogout } from '../api/client';
 import { useTheme } from '../App';
 
 const { Sider, Header, Content } = Layout;
-const { useToken } = theme;
 
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
@@ -33,39 +32,46 @@ const menuItems = [
 export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState<any>(null);
   const [collapsed, setCollapsed] = useState(false);
   const { dark, toggle } = useTheme();
-  const { token } = useToken();
+
+  // Load user from localStorage immediately, then refresh from API
+  const [user, setUser] = useState<any>(() => {
+    try { return JSON.parse(localStorage.getItem('rc_user') || 'null'); } catch { return null; }
+  });
 
   useEffect(() => {
-    getMe().then(r => setUser(r.data)).catch(() => {});
+    getMe().then(r => {
+      setUser(r.data);
+      localStorage.setItem('rc_user', JSON.stringify(r.data));
+    }).catch(() => {});
   }, []);
 
   const handleLogout = async () => {
     await apiLogout().catch(() => {});
     localStorage.removeItem('rc_token');
+    localStorage.removeItem('rc_user');
     window.location.href = '/admin/login';
   };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} width={240}
-        style={{ background: token.colorBgContainer, borderRight: `1px solid ${token.colorBorderSecondary}` }}>
-        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 10, borderBottom: `1px solid ${token.colorBorderSecondary}` }}>
+        theme={dark ? 'dark' : 'light'}>
+        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ color: '#FF4D14', fontWeight: 900, fontStyle: 'italic', fontSize: collapsed ? 14 : 18 }}>RC</span>
-          {!collapsed && <span style={{ color: token.colorText, fontWeight: 900, fontStyle: 'italic', fontSize: 18 }}>DriveHub</span>}
+          {!collapsed && <span style={{ fontWeight: 900, fontStyle: 'italic', fontSize: 18 }}>DriveHub</span>}
         </div>
         <Menu
           mode="inline"
+          theme={dark ? 'dark' : 'light'}
           selectedKeys={[location.pathname.replace('/admin', '') || '/']}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
-          style={{ background: 'transparent', borderRight: 'none' }}
         />
       </Sider>
       <Layout>
-        <Header style={{ background: token.colorBgContainer, padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, borderBottom: `1px solid ${token.colorBorderSecondary}`, lineHeight: 'normal' }}>
+        <Header style={{ padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, lineHeight: 'normal', height: 56 }}>
           <Switch
             checked={dark}
             onChange={toggle}
@@ -80,7 +86,7 @@ export default function AdminLayout() {
           )}
           <Button type="text" icon={<LogoutOutlined />} onClick={handleLogout} danger>Çıxış</Button>
         </Header>
-        <Content style={{ padding: 24, background: token.colorBgLayout, overflow: 'auto' }}>
+        <Content style={{ padding: 24, overflow: 'auto' }}>
           <Outlet />
         </Content>
       </Layout>

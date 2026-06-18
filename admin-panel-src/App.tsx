@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider, theme } from 'antd';
 import LoginPage from './pages/LoginPage';
@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage';
 import CrudPage from './pages/CrudPage';
 import SettingsPage from './pages/SettingsPage';
 import UsersPage from './pages/UsersPage';
+import './index.css';
 
 const isAuth = () => !!localStorage.getItem('rc_token');
 
@@ -24,6 +25,11 @@ export default function App() {
     setDark(next);
     localStorage.setItem('rc_theme', next ? 'dark' : 'light');
   };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    document.body.style.background = dark ? '#0f0f0f' : '#f5f5f5';
+  }, [dark]);
 
   return (
     <ThemeContext.Provider value={{ dark, toggle }}>
@@ -53,7 +59,7 @@ export default function App() {
               <Route path="footer-groups" element={<CrudPage resource="footer-groups" title="Footer" />} />
               <Route path="reassurance-items" element={<CrudPage resource="reassurance-items" title="Etibar Zolağı" />} />
               <Route path="settings" element={<SettingsPage />} />
-            <Route path="users" element={<UsersPage />} />
+              <Route path="users" element={<UsersPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

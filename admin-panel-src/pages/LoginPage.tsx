@@ -15,6 +15,7 @@ export default function LoginPage() {
     try {
       const { data } = await login(values.email, values.password);
       localStorage.setItem('rc_token', data.token);
+      localStorage.setItem('rc_user', JSON.stringify(data.user));
       window.location.href = '/admin';
     } catch {
       message.error('Email və ya şifrə yanlışdır');

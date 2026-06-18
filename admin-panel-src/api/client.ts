@@ -50,6 +50,13 @@ export const upload = (file: File) => {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 };
+export const uploadMultiple = (files: File[]) => {
+  const fd = new FormData();
+  files.forEach(f => fd.append('files[]', f));
+  return client.post('/admin/upload', fd, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
 export const batchSettings = (data: Record<string, string>) =>
   client.post('/admin/settings/batch', data);
 
