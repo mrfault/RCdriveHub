@@ -6,7 +6,7 @@ function Gallery({ image }) {
     <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr', gap: 10 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {[0,1,2,3].map(i => (
-          <button key={i} onClick={() => setActive(i)} style={{ aspectRatio: '1', borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'linear-gradient(180deg,#1c212c,#0c0e13)', border: `1px solid ${active===i ? 'var(--flame-500)' : 'var(--border-subtle)'}`, padding: 0, display: 'grid', placeItems: 'center', transition: 'border-color var(--dur-fast)' }}>
+          <button type="button" key={i} onClick={() => setActive(i)} style={{ aspectRatio: '1', borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'linear-gradient(180deg,#1c212c,#0c0e13)', border: `1px solid ${active===i ? 'var(--flame-500)' : 'var(--border-subtle)'}`, padding: 0, display: 'grid', placeItems: 'center', transition: 'border-color var(--dur-fast)' }}>
             {image ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: active===i ? 'none' : 'grayscale(0.4) brightness(0.8)' }} /> : <Icon name="truck" size={26} strokeWidth={1.2} color="var(--carbon-600)" />}
           </button>
         ))}
@@ -28,7 +28,7 @@ function ProductView({ product, onAdd, onBack, related }) {
   const [qty, setQty] = React.useState(1);
   return (
     <div className="rc-container" style={{ padding: '24px 0 0' }}>
-      <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, marginBottom: 18 }}
+      <button type="button" onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, marginBottom: 18 }}
         onMouseEnter={(e)=>e.currentTarget.style.color='var(--flame-400)'} onMouseLeave={(e)=>e.currentTarget.style.color='var(--text-muted)'}>
         <Icon name="chevron-left" size={16} /> Kataloqa qayıt
       </button>

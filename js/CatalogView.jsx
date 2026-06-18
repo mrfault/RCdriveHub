@@ -83,17 +83,17 @@ function CatalogView({ data, onOpen, onAdd }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-muted)' }}>{filtered.length} nəticə</span>
               {[...sel].slice(0, 4).map(id => <FilterChip key={id} active removable onRemove={() => toggle(id)}>{id}</FilterChip>)}
-              {sel.size > 0 && <button onClick={() => setSel(new Set())} style={{ background: 'none', border: 'none', color: 'var(--flame-400)', fontSize: 12.5, fontWeight: 600 }}>Təmizlə</button>}
+              {sel.size > 0 && <button type="button" onClick={() => setSel(new Set())} style={{ background: 'none', border: 'none', color: 'var(--flame-400)', fontSize: 12.5, fontWeight: 600 }}>Təmizlə</button>}
             </div>
             <div style={{ position: 'relative' }}>
-              <button onClick={() => setSortOpen(o => !o)} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 14px', background: 'var(--surface-raised)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', color: 'var(--text-body)', fontSize: 13 }}>
+              <button type="button" onClick={() => setSortOpen(o => !o)} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 14px', background: 'var(--surface-raised)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', color: 'var(--text-body)', fontSize: 13 }}>
                 <span style={{ color: 'var(--text-faint)' }}>Sırala:</span> <strong style={{ color: 'var(--text-strong)' }}>{sort}</strong>
                 <Icon name="chevron-down" size={15} />
               </button>
               {sortOpen && (
                 <div style={{ position: 'absolute', right: 0, top: '110%', zIndex: 20, minWidth: 180, background: 'var(--surface-raised)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-lg)', overflow: 'hidden' }}>
                   {sorts.map(s => (
-                    <button key={s} onClick={() => { setSort(s); setSortOpen(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 14px', background: s === sort ? 'var(--flame-soft)' : 'transparent', border: 'none', color: s === sort ? 'var(--flame-300)' : 'var(--text-body)', fontSize: 13 }}>{s}</button>
+                    <button type="button" key={s} onClick={() => { setSort(s); setSortOpen(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 14px', background: s === sort ? 'var(--flame-soft)' : 'transparent', border: 'none', color: s === sort ? 'var(--flame-300)' : 'var(--text-body)', fontSize: 13 }}>{s}</button>
                   ))}
                 </div>
               )}

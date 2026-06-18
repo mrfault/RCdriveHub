@@ -208,7 +208,7 @@ function Tabs({ items = [], value, onChange, style, ...rest }) {
       {items.map((it) => {
         const on = it.id === active;
         return (
-          <button key={it.id} role="tab" aria-selected={on} onClick={() => onChange && onChange(it.id)}
+          <button type="button" key={it.id} role="tab" aria-selected={on} onClick={() => onChange && onChange(it.id)}
             style={{ position: 'relative', padding: '12px 16px', background: 'transparent', border: 'none', color: on ? 'var(--text-strong)' : 'var(--text-muted)', fontFamily: 'var(--font-sans)', fontWeight: on ? 700 : 600, fontSize: '0.875rem', letterSpacing: '0.02em', textTransform: 'uppercase', transition: 'color var(--dur-fast)' }}
             onMouseEnter={(e) => { if (!on) e.currentTarget.style.color = 'var(--text-body)'; }}
             onMouseLeave={(e) => { if (!on) e.currentTarget.style.color = on ? 'var(--text-strong)' : 'var(--text-muted)'; }}>
@@ -284,7 +284,7 @@ function ProductCard({ image, title, brand, price, oldPrice, badge, rating, scal
             {oldPrice && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--fs-caption)', color: 'var(--text-faint)', textDecoration: 'line-through' }}>{oldPrice}</span>}
             <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '1.25rem', color: oldPrice ? 'var(--volt-500)' : 'var(--text-strong)', fontVariantNumeric: 'tabular-nums' }}>{price}</span>
           </div>
-          <button onClick={onAdd} aria-label="Sebete at"
+          <button type="button" onClick={onAdd} aria-label="Sebete at"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: hover ? '9px 14px' : '9px', borderRadius: 'var(--radius-md)', background: 'var(--grad-flame)', color: '#fff', border: 'none', fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.06em', textTransform: 'uppercase', boxShadow: hover ? 'var(--glow-flame-sm)' : 'none', transition: 'padding var(--dur-base) var(--ease-out), box-shadow var(--dur-base)', whiteSpace: 'nowrap', overflow: 'hidden' }}>
             <Icon name="cart" size={16} strokeWidth={2} />
             {hover && <span>AT</span>}
@@ -315,9 +315,9 @@ function Lightbox({ images, index, onClose, onChange }) {
   }, [idx, len, onClose, onChange]);
 
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'rc-rise 200ms var(--ease-power) both' }}>
+    <div role="dialog" aria-modal="true" aria-label="Şəkil baxışı" onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'rc-rise 200ms var(--ease-power) both' }}>
       {/* Close */}
-      <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, width: 44, height: 44, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', zIndex: 2 }}>
+      <button type="button" onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, width: 44, height: 44, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', zIndex: 2 }}>
         <Icon name="x" size={22} />
       </button>
 
@@ -325,14 +325,14 @@ function Lightbox({ images, index, onClose, onChange }) {
       <div style={{ position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'rgba(255,255,255,0.6)', zIndex: 2 }}>{idx + 1} / {len}</div>
 
       {/* Prev */}
-      {len > 1 && <button onClick={(e) => { e.stopPropagation(); prev(); }} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', width: 48, height: 48, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', zIndex: 2, transition: 'background 150ms' }}
+      {len > 1 && <button type="button" onClick={(e) => { e.stopPropagation(); prev(); }} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', width: 48, height: 48, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', zIndex: 2, transition: 'background 150ms' }}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,77,20,0.3)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}>
         <Icon name="chevron-left" size={24} />
       </button>}
 
       {/* Next */}
-      {len > 1 && <button onClick={(e) => { e.stopPropagation(); next(); }} style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', width: 48, height: 48, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', zIndex: 2, transition: 'background 150ms' }}
+      {len > 1 && <button type="button" onClick={(e) => { e.stopPropagation(); next(); }} style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', width: 48, height: 48, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', zIndex: 2, transition: 'background 150ms' }}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,77,20,0.3)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}>
         <Icon name="chevron-right" size={24} />
@@ -346,7 +346,7 @@ function Lightbox({ images, index, onClose, onChange }) {
       {len > 1 && (
         <div style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8, zIndex: 2 }}>
           {images.map((img, i) => (
-            <button key={i} onClick={(e) => { e.stopPropagation(); onChange(i); }}
+            <button type="button" key={i} onClick={(e) => { e.stopPropagation(); onChange(i); }}
               style={{ width: 56, height: 42, borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: `2px solid ${i === idx ? 'var(--flame-500)' : 'rgba(255,255,255,0.15)'}`, padding: 0, opacity: i === idx ? 1 : 0.5, transition: 'opacity 150ms, border-color 150ms' }}>
               <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </button>

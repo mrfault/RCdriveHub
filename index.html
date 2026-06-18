@@ -74,6 +74,7 @@
 </style>
 </head>
 <body>
+<a href="#main-content" class="rc-skip-nav" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:999" onfocus="this.style.cssText='position:fixed;top:8px;left:8px;z-index:999;padding:12px 24px;background:var(--grad-flame);color:#fff;border-radius:6px;font-weight:700;text-decoration:none'" onblur="this.style.cssText='position:absolute;left:-9999px'">Məzmuna keç</a>
 <div id="app"></div>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
@@ -174,8 +175,6 @@
     const accept = () => {
       localStorage.setItem('rc_cookies', 'accepted');
       setVisible(false);
-      // Start music immediately on this click (user gesture)
-      if (window._toggleMusic) window._toggleMusic();
     };
     const deny = () => { localStorage.setItem('rc_cookies', 'denied'); setVisible(false); };
     return (
@@ -217,14 +216,14 @@
     const [toast, setToast] = React.useState(null);
     const [lightbox, setLightbox] = React.useState(null);
     const [musicPlaying, setMusicPlaying] = React.useState(false);
-    const [showSplash, setShowSplash] = React.useState(() => window.innerWidth > 768 && localStorage.getItem('rc_cookies') === 'accepted');
+    const [showSplash, setShowSplash] = React.useState(() => window.innerWidth > 768);
     const audioRef = React.useRef(null);
     const tRef = React.useRef();
 
-    // Init audio once
+    // Init audio only on desktop AND only if cookies accepted (saves bandwidth)
     React.useEffect(() => {
-      // Music only on desktop
       if (window.innerWidth <= 768) return;
+      if (localStorage.getItem('rc_cookies') !== 'accepted') return;
       const a = new Audio('assets/nfs.mp3');
       a.loop = true;
       a.volume = 0.3;
@@ -265,7 +264,7 @@
       <div>
         {showSplash && <SplashScreen onEnter={enterSite} />}
         <Header nav={NAV} current={view} onNav={go} cartCount={cart} onSearch={() => go('catalog')} />
-        <main>
+        <main id="main-content">
           {view === 'home' && <HomeView data={data} onNav={go} onAdd={addToCart} />}
           {view === 'finder' && <PartFinderView data={data} onAdd={addToCart} />}
           {view === 'tuning' && <TuningView data={data} onAdd={addToCart} />}

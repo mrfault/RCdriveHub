@@ -9,7 +9,7 @@ function CartRow({ item, onQty, onRemove }) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--flame-400)' }}>{item.brand} · {item.scale || 'HİSSƏ'}</span>
-          <button onClick={onRemove} aria-label="Sil" style={{ background: 'none', border: 'none', color: 'var(--text-faint)', display: 'inline-flex' }}
+          <button type="button" onClick={onRemove} aria-label="Sil" style={{ background: 'none', border: 'none', color: 'var(--text-faint)', display: 'inline-flex' }}
             onMouseEnter={(e)=>e.currentTarget.style.color='var(--danger-500)'} onMouseLeave={(e)=>e.currentTarget.style.color='var(--text-faint)'}><Icon name="x" size={18} /></button>
         </div>
         <div style={{ fontSize: 14.5, fontWeight: 600, color: 'var(--text-strong)', margin: '4px 0 10px', lineHeight: 1.3 }}>{item.title}</div>
@@ -53,7 +53,7 @@ function CartView({ data, onNav }) {
         <div className="rc-cart-grid" style={{ display: 'grid', alignItems: 'start' }}>
           <div>
             {lines.map((l, i) => <CartRow key={l.id} item={l} onQty={(q) => setQty(i, q)} onRemove={() => remove(i)} />)}
-            <button onClick={() => onNav('catalog')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 18, background: 'none', border: 'none', color: 'var(--flame-400)', fontWeight: 600, fontSize: 13.5 }}>
+            <button type="button" onClick={() => onNav('catalog')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 18, background: 'none', border: 'none', color: 'var(--flame-400)', fontWeight: 600, fontSize: 13.5 }}>
               <Icon name="chevron-left" size={16} /> Alış-verişə davam et
             </button>
           </div>

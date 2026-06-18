@@ -82,7 +82,7 @@ function CategoryGrid({ cats, onPick }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 14 }}>
       {cats.map(c => (
-        <button key={c.id} onClick={() => onPick(c.id)}
+        <button type="button" key={c.id} onClick={() => onPick(c.id)}
           style={{ position: 'relative', textAlign: 'left', padding: '22px 18px', background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', transition: 'transform var(--dur-base) var(--ease-power), border-color var(--dur-base)' }}
           onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'var(--border-flame)'; e.currentTarget.querySelector('.ci').style.color = 'var(--flame-500)'; e.currentTarget.querySelector('.ci').style.transform = 'translateX(3px) rotate(-6deg)'; }}
           onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.querySelector('.ci').style.color = 'var(--text-muted)'; e.currentTarget.querySelector('.ci').style.transform = 'none'; }}>

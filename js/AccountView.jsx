@@ -25,7 +25,7 @@ function OrderDetail({ order, onBack }) {
   const cancelled = order.step < 0;
   return (
     <div className="rc-reveal">
-      <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, marginBottom: 16 }}
+      <button type="button" onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, marginBottom: 16 }}
         onMouseEnter={(e)=>e.currentTarget.style.color='var(--flame-500)'} onMouseLeave={(e)=>e.currentTarget.style.color='var(--text-muted)'}>
         <Icon name="chevron-left" size={16} /> Sifarişlərə qayıt
       </button>
@@ -132,12 +132,12 @@ function AccountView({ onNav }) {
           {nav.map(n => {
             const on = section === n.id;
             return (
-              <button key={n.id} onClick={() => { setSection(n.id); setOrder(null); }} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', textAlign: 'left', background: on ? 'var(--flame-soft)' : 'transparent', border: `1px solid ${on ? 'var(--border-flame)' : 'transparent'}`, borderRadius: 'var(--radius-md)', color: on ? 'var(--flame-300)' : 'var(--text-body)', fontWeight: 600, fontSize: 14, transition: 'background var(--dur-fast)', whiteSpace: 'nowrap' }}>
+              <button type="button" key={n.id} onClick={() => { setSection(n.id); setOrder(null); }} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', textAlign: 'left', background: on ? 'var(--flame-soft)' : 'transparent', border: `1px solid ${on ? 'var(--border-flame)' : 'transparent'}`, borderRadius: 'var(--radius-md)', color: on ? 'var(--flame-300)' : 'var(--text-body)', fontWeight: 600, fontSize: 14, transition: 'background var(--dur-fast)', whiteSpace: 'nowrap' }}>
                 <Icon name={n.icon} size={18} color={on ? 'var(--flame-400)' : 'var(--text-muted)'} /> {n.label}
               </button>
             );
           })}
-          <button onClick={() => onNav('home')} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', textAlign: 'left', background: 'transparent', border: '1px solid transparent', borderRadius: 'var(--radius-md)', color: 'var(--text-faint)', fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>
+          <button type="button" onClick={() => onNav('home')} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', textAlign: 'left', background: 'transparent', border: '1px solid transparent', borderRadius: 'var(--radius-md)', color: 'var(--text-faint)', fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>
             <Icon name="chevron-left" size={18} /> Çıxış
           </button>
         </aside>

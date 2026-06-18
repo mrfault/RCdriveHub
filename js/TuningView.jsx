@@ -2,7 +2,7 @@
 
 function TuningCategoryCard({ cat, onClick }) {
   return (
-    <button onClick={onClick}
+    <button type="button" onClick={onClick}
       style={{ position: 'relative', textAlign: 'left', padding: '22px 18px', background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', transition: 'transform var(--dur-base) var(--ease-power), border-color var(--dur-base)' }}
       onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'var(--border-flame)'; }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border-subtle)'; }}>
@@ -107,7 +107,7 @@ function TuningView({ data, onAdd }) {
               </FilterChip>
             ))}
             {activeCat && (
-              <button onClick={() => setActiveCat(null)} style={{ background: 'none', border: 'none', color: 'var(--flame-400)', fontSize: 12.5, fontWeight: 600 }}>Təmizlə</button>
+              <button type="button" onClick={() => setActiveCat(null)} style={{ background: 'none', border: 'none', color: 'var(--flame-400)', fontSize: 12.5, fontWeight: 600 }}>Təmizlə</button>
             )}
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-faint)', marginLeft: 'auto' }}>{searched.length} nəticə</span>
           </div>
@@ -127,7 +127,7 @@ function TuningView({ data, onAdd }) {
             <div style={{ textAlign: 'center', padding: '60px 0' }}>
               <Icon name="wrench" size={48} strokeWidth={1.2} color="var(--carbon-600)" style={{ margin: '0 auto 14px' }} />
               <p style={{ color: 'var(--text-muted)', marginBottom: 8 }}>Bu kateqoriyada hissə tapılmadı.</p>
-              <button onClick={() => { setActiveCat(null); setSearchVal(''); }} style={{ background: 'none', border: 'none', color: 'var(--flame-400)', fontWeight: 600, fontSize: 14 }}>Bütün hissələrə bax</button>
+              <button type="button" onClick={() => { setActiveCat(null); setSearchVal(''); }} style={{ background: 'none', border: 'none', color: 'var(--flame-400)', fontWeight: 600, fontSize: 14 }}>Bütün hissələrə bax</button>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 14 }}>

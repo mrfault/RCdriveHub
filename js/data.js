@@ -1,5 +1,7 @@
 /* RC HUB — shared catalog data.
-   Imagery: CC-licensed RC photos from Wikimedia Commons. */
+   Imagery: CC-licensed RC photos hotlinked from Wikimedia Commons.
+   TODO: For production, download images to /storage/uploads/images/ and update URLs.
+   Hotlinking is fragile — URLs may change or be rate-limited at scale. */
 const IMG = (file, w) => 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(file) + '?width=' + (w || 800);
 window.RCIMG = {
   heroAction: IMG('A Traxxas T-Maxx 3.3 in action.jpg', 1400),

@@ -55,7 +55,7 @@ function BuilderStepNav({ steps, current, selections, onStep }) {
         const active = current === s.id;
         const done = !!selections[s.id];
         return (
-          <button key={s.id} onClick={() => onStep(s.id)}
+          <button type="button" key={s.id} onClick={() => onStep(s.id)}
             style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 20px', background: 'none', border: 'none', borderBottom: active ? '2px solid var(--flame-500)' : '2px solid transparent', marginBottom: -2, color: active ? 'var(--text-strong)' : done ? 'var(--flame-400)' : 'var(--text-faint)', fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', whiteSpace: 'nowrap', transition: 'color var(--dur-fast), border-color var(--dur-fast)' }}>
             <span style={{ width: 22, height: 22, borderRadius: 999, display: 'grid', placeItems: 'center', fontSize: 11, background: done ? 'var(--grad-flame)' : active ? 'var(--flame-soft)' : 'var(--surface-chip)', color: done ? '#fff' : active ? 'var(--flame-400)' : 'var(--text-faint)', flex: 'none' }}>
               {done ? <Icon name="check" size={12} strokeWidth={3} /> : s.num}
@@ -71,7 +71,7 @@ function BuilderStepNav({ steps, current, selections, onStep }) {
 function BuilderOptionCard({ opt, selected, onSelect, showImage }) {
   const on = selected;
   return (
-    <button onClick={() => onSelect(opt)}
+    <button type="button" onClick={() => onSelect(opt)}
       style={{ display: 'flex', gap: 16, padding: 18, background: on ? 'var(--flame-soft)' : 'var(--surface-card)', border: `2px solid ${on ? 'var(--flame-500)' : 'var(--border-subtle)'}`, borderRadius: 'var(--radius-lg)', textAlign: 'left', transition: 'border-color var(--dur-base), background var(--dur-base), transform var(--dur-base)', width: '100%' }}
       onMouseEnter={(e) => { if (!on) { e.currentTarget.style.borderColor = 'var(--border-flame)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}}
       onMouseLeave={(e) => { if (!on) { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.transform = 'none'; }}}>
@@ -136,7 +136,7 @@ function BuilderSummary({ steps, selections, options, onReset }) {
       </Button>
 
       {items.length > 0 && (
-        <button onClick={onReset} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%', marginTop: 12, padding: '10px 0', background: 'none', border: 'none', color: 'var(--text-faint)', fontSize: 12.5, fontWeight: 600 }}
+        <button type="button" onClick={onReset} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%', marginTop: 12, padding: '10px 0', background: 'none', border: 'none', color: 'var(--text-faint)', fontSize: 12.5, fontWeight: 600 }}
           onMouseEnter={(e) => e.currentTarget.style.color = 'var(--danger-500)'}
           onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-faint)'}>
           <Icon name="x" size={14} /> Sıfırla

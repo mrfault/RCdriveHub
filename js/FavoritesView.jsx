@@ -23,7 +23,7 @@ function FavoritesView({ data, onOpen, onAdd, onNav }) {
           {favs.map(p => (
             <div key={p.id} style={{ position: 'relative', height: '100%' }}>
               <div onClick={() => onOpen(p)} style={{ cursor: 'pointer', height: '100%' }}><ProductCard {...p} onAdd={() => onAdd(p)} style={{ height: '100%', display: 'flex', flexDirection: 'column' }} /></div>
-              <button onClick={() => remove(p.id)} aria-label="Seçilmişlərdən sil"
+              <button type="button" onClick={() => remove(p.id)} aria-label="Seçilmişlərdən sil"
                 style={{ position: 'absolute', top: 10, right: 10, width: 34, height: 34, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'rgba(8,9,12,0.7)', border: '1px solid var(--border-flame)', color: 'var(--flame-400)', backdropFilter: 'blur(6px)', zIndex: 2 }}>
                 <Icon name="heart" size={16} style={{ fill: 'var(--flame-500)' }} />
               </button>

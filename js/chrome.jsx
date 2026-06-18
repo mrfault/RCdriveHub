@@ -17,11 +17,11 @@ function TopBar() {
 function MobileMenu({ nav, current, onNav, onClose }) {
   return (
     <div className="rc-mobile-menu" onClick={onClose}>
-      <button onClick={(e) => { e.stopPropagation(); onClose(); }} style={{ position: 'absolute', top: 20, right: 20, width: 44, height: 44, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'var(--surface-raised)', border: '1px solid var(--border-subtle)', color: 'var(--text-strong)', fontSize: 0, padding: 0 }}>
+      <button type="button" onClick={(e) => { e.stopPropagation(); onClose(); }} style={{ position: 'absolute', top: 20, right: 20, width: 44, height: 44, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'var(--surface-raised)', border: '1px solid var(--border-subtle)', color: 'var(--text-strong)', fontSize: 0, padding: 0 }}>
         <Icon name="x" size={22} />
       </button>
       {nav.map(n => (
-        <button key={n.label} onClick={(e) => { e.stopPropagation(); onNav(n.id); onClose(); }}
+        <button type="button" key={n.label} onClick={(e) => { e.stopPropagation(); onNav(n.id); onClose(); }}
           style={{ color: current === n.id ? 'var(--flame-500)' : undefined }}>
           {n.label}
         </button>
@@ -42,18 +42,18 @@ function Header({ nav, current, onNav, cartCount, onSearch }) {
       <div style={{ background: 'rgba(14,16,20,0.92)', backdropFilter: 'blur(14px)', borderBottom: '1px solid var(--border-subtle)' }}>
         <div className="rc-container" style={{ height: 60, display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* Mobile hamburger */}
-          <button className="rc-show-md" onClick={() => setMenuOpen(true)}
+          <button type="button" className="rc-show-md" onClick={() => setMenuOpen(true)}
             style={{ background: 'none', border: 'none', padding: 4, color: 'var(--text-strong)', display: 'none' }}>
             <Icon name="menu" size={24} />
           </button>
-          <button onClick={() => onNav('home')} style={{ background: 'none', border: 'none', padding: 0 }}><Logo size={24} /></button>
+          <button type="button" onClick={() => onNav('home')} style={{ background: 'none', border: 'none', padding: 0 }}><Logo size={24} /></button>
           <nav className="rc-hide-md" style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
             {nav.map((n) => {
               const isBuilder = n.id === 'builder';
               const defaultColor = isBuilder ? 'var(--flame-500)' : 'var(--carbon-200)';
               const activeColor = 'var(--text-strong)';
               return (
-                <button key={n.label} onClick={() => onNav(n.id)}
+                <button type="button" key={n.label} onClick={() => onNav(n.id)}
                   lang={n.lang || undefined}
                   className={isBuilder && current !== n.id ? 'rc-nav-builder' : ''}
                   style={{ position: 'relative', padding: '8px 12px', background: 'none', border: 'none', fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: 13, letterSpacing: '0.04em', textTransform: 'uppercase', color: current === n.id ? activeColor : defaultColor, transition: 'color var(--dur-fast)' }}
@@ -70,7 +70,7 @@ function Header({ nav, current, onNav, cartCount, onSearch }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 'auto' }}>
             {/* Music toggle — desktop only */}
-            <button onClick={() => window._toggleMusic && window._toggleMusic()} aria-label="Musiqi"
+            <button type="button" onClick={() => window._toggleMusic && window._toggleMusic()} aria-label="Musiqi"
               className={(window._musicPlaying ? 'rc-eq-playing' : 'rc-eq-paused') + ' rc-hide-sm'}
               style={{ width: 40, height: 40, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, background: 'none', border: '1px solid transparent', borderRadius: 'var(--radius-md)', transition: 'background var(--dur-base)' }}
               onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-hover)'}
@@ -118,7 +118,7 @@ function BrandMarquee({ brands }) {
     <div style={{ overflow: 'hidden', borderBlock: '1px solid var(--border-subtle)', background: 'var(--carbon-950)', padding: '16px 0' }}>
       <div style={{ display: 'flex', gap: 40, width: 'max-content', animation: 'rc-marquee 26s linear infinite' }}>
         {row.map((b, i) => (
-          <span key={i} style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 900, fontSize: 22, letterSpacing: '-0.01em', color: 'var(--carbon-600)', whiteSpace: 'nowrap', transition: 'color var(--dur-base)' }}
+          <span key={b + '_' + i} style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 900, fontSize: 22, letterSpacing: '-0.01em', color: 'var(--carbon-600)', whiteSpace: 'nowrap', transition: 'color var(--dur-base)' }}
             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--flame-500)'}
             onMouseLeave={(e) => e.currentTarget.style.color = 'var(--carbon-600)'}>{b}</span>
         ))}
