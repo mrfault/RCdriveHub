@@ -53,7 +53,7 @@ export function Header({ nav, current, onNav, cartCount, onSearch }) {
           <button type="button" onClick={() => onNav('home')} style={{ background: 'none', border: 'none', padding: 0 }}><Logo size={24} /></button>
           <nav className="rc-hide-md" style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
             {nav.map((n) => {
-              const isBuilder = n.id === 'builder';
+              const isBuilder = n.id === 'rc-builder';
               const defaultColor = isBuilder ? 'var(--flame-500)' : 'var(--carbon-200)';
               const activeColor = 'var(--text-strong)';
               return (

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { RCDATA, RCIMG } from './data.js';
 import { Icon, Lightbox, Logo } from './components/index.jsx';
 import { Header, Footer } from './components/chrome.jsx';
@@ -17,13 +18,23 @@ const TuningView = lazy(() => import('./views/TuningView.jsx'));
 const BuilderView = lazy(() => import('./views/BuilderView.jsx'));
 
 const NAV = [
-  { id: 'catalog', label: 'Modellər' },
-  { id: 'finder', label: 'Ehtiyat hissələri' },
-  { id: 'tuning', label: 'Tuning' },
-  { id: 'builder', label: 'RC BUILDER', lang: 'en' },
-  { id: 'sale', label: 'Endirimlər' },
+  { id: 'modeller', label: 'Modellər', path: '/modeller' },
+  { id: 'ehtiyat-hisseleri', label: 'Ehtiyat hissələri', path: '/ehtiyat-hisseleri' },
+  { id: 'tuning', label: 'Tuning', path: '/tuning' },
+  { id: 'rc-builder', label: 'RC BUILDER', lang: 'en', path: '/rc-builder' },
+  { id: 'endirimler', label: 'Endirimlər', path: '/endirimler' },
 ];
 
+// SEO: Dynamic page title + meta
+function usePageMeta(title, description) {
+  useEffect(() => {
+    document.title = title ? `${title} | RC DriveHub` : 'RC DriveHub — RC Maşın Mağazası';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta && description) meta.setAttribute('content', description);
+  }, [title, description]);
+}
+
+// Error Boundary
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null }; }
   static getDerivedStateFromError(error) { return { error }; }
@@ -40,9 +51,11 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+// Splash
 function SplashScreen({ onEnter }) {
   return (
-    <div role="button" tabIndex={0} onClick={onEnter} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onEnter(); }} style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'var(--carbon-950)', display: 'flex', flexDirection: 'column', cursor: 'pointer', animation: 'rc-rise 500ms var(--ease-power) both', outline: 'none' }}>
+    <div role="button" tabIndex={0} onClick={onEnter} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onEnter(); }}
+      style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'var(--carbon-950)', display: 'flex', flexDirection: 'column', cursor: 'pointer', animation: 'rc-rise 500ms var(--ease-power) both', outline: 'none' }}>
       <div style={{ padding: '24px 0 0' }} className="rc-container"><Logo size={28} /></div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 900, textTransform: 'uppercase', fontSize: 'clamp(2.5rem,6vw,4.5rem)', lineHeight: 0.9, color: 'var(--text-strong)', textAlign: 'center' }}>
@@ -102,39 +115,42 @@ function Toast({ item }) {
 
 const Loading = () => <div style={{ display: 'flex', justifyContent: 'center', padding: 60, color: 'var(--text-faint)' }}>Yüklənir...</div>;
 
-export default function App() {
+// Product page wrapper with slug routing
+function ProductPage({ data, relatedProducts, onAdd }) {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const product = data.products.find(p => p.id === slug) || data.products[0];
+  usePageMeta(product.title, `${product.brand} ${product.title} — ${product.price}`);
+  return <ProductView product={product} related={relatedProducts} onAdd={onAdd} onBack={() => navigate('/modeller')} />;
+}
+
+// Main app with router
+function AppContent() {
   const data = RCDATA;
-  const [view, setView] = useState('home');
-  const [product, setProduct] = useState(data.products[0]);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [cartItems, setCartItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('rc_cart') || '[]'); } catch { return []; }
   });
   const [toast, setToast] = useState(null);
   const [lightbox, setLightbox] = useState(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
-  const [showSplash, setShowSplash] = useState(() => window.innerWidth > 768);
+  const [showSplash, setShowSplash] = useState(() => window.innerWidth > 768 && !sessionStorage.getItem('rc_splash_done'));
   const audioRef = useRef(null);
   const tRef = useRef();
 
-  // Audio init
+  useEffect(() => { localStorage.setItem('rc_cart', JSON.stringify(cartItems)); }, [cartItems]);
+  useEffect(() => { return () => clearTimeout(tRef.current); }, []);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [location.pathname]);
+
+  // Audio
   useEffect(() => {
-    if (window.innerWidth <= 768) return;
-    if (localStorage.getItem('rc_cookies') !== 'accepted') return;
+    if (window.innerWidth <= 768 || localStorage.getItem('rc_cookies') !== 'accepted') return;
     const a = new Audio(nfsSrc);
     a.loop = true;
     a.volume = 0.3;
     audioRef.current = a;
     return () => { a.pause(); };
-  }, []);
-
-  // Persist cart to localStorage
-  useEffect(() => {
-    localStorage.setItem('rc_cart', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // Toast cleanup on unmount
-  useEffect(() => {
-    return () => clearTimeout(tRef.current);
   }, []);
 
   const toggleMusic = useCallback(() => {
@@ -144,10 +160,7 @@ export default function App() {
     else { a.play().then(() => setMusicPlaying(true)).catch(() => {}); }
   }, [musicPlaying]);
 
-  const openLightbox = useCallback((images, index) => {
-    setLightbox({ images, index: index || 0 });
-  }, []);
-
+  const openLightbox = useCallback((images, index) => setLightbox({ images, index: index || 0 }), []);
   const closeLightbox = useCallback(() => setLightbox(null), []);
 
   const addToCart = useCallback((item, qty = 1) => {
@@ -161,47 +174,107 @@ export default function App() {
     tRef.current = setTimeout(() => setToast(null), 2600);
   }, []);
 
-  const go = useCallback((v) => { setView(v); window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
-  const openProduct = useCallback((p) => { setProduct(p); go('product'); }, [go]);
+  const go = useCallback((v) => {
+    const routes = { home: '/', catalog: '/modeller', finder: '/ehtiyat-hisseleri', tuning: '/tuning', builder: '/rc-builder', sale: '/endirimler', cart: '/sebet', favorites: '/sevilmisler', account: '/hesab' };
+    navigate(routes[v] || '/');
+  }, [navigate]);
+
+  const openProduct = useCallback((p) => navigate(`/modeller/${p.id}`), [navigate]);
 
   const enterSite = useCallback(() => {
     setShowSplash(false);
+    sessionStorage.setItem('rc_splash_done', '1');
     const a = audioRef.current;
     if (a) a.play().then(() => setMusicPlaying(true)).catch(() => {});
   }, []);
 
   const relatedProducts = useMemo(() => [...data.products, ...data.parts], [data]);
   const appCtx = useMemo(() => ({ musicPlaying, toggleMusic, openLightbox }), [musicPlaying, toggleMusic, openLightbox]);
+  const cartCount = cartItems.reduce((s, c) => s + c.qty, 0);
+
+  // Detect current nav from path
+  const currentNav = NAV.find(n => location.pathname.startsWith(n.path))?.id || '';
 
   return (
+    <AppContext.Provider value={appCtx}>
+      {showSplash && <SplashScreen onEnter={enterSite} />}
+      <a href="#main-content" className="rc-skip-nav">Məzmuna keç</a>
+      <Header nav={NAV} current={currentNav} onNav={(id) => {
+        const n = NAV.find(n => n.id === id);
+        if (n) navigate(n.path);
+        else go(id);
+      }} cartCount={cartCount} onSearch={() => navigate('/modeller')} />
+      <main id="main-content">
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path="/" element={<HomePageWrapper data={data} go={go} addToCart={addToCart} />} />
+            <Route path="/modeller" element={<CatalogPageWrapper data={data} openProduct={openProduct} addToCart={addToCart} />} />
+            <Route path="/modeller/:slug" element={<ProductPage data={data} relatedProducts={relatedProducts} onAdd={addToCart} />} />
+            <Route path="/ehtiyat-hisseleri" element={<FinderPageWrapper data={data} addToCart={addToCart} />} />
+            <Route path="/tuning" element={<TuningPageWrapper data={data} addToCart={addToCart} />} />
+            <Route path="/rc-builder" element={<BuilderPageWrapper addToCart={addToCart} />} />
+            <Route path="/endirimler" element={<SalePageWrapper data={data} openProduct={openProduct} addToCart={addToCart} />} />
+            <Route path="/sebet" element={<CartView data={data} onNav={go} cartItems={cartItems} setCartItems={setCartItems} />} />
+            <Route path="/sevilmisler" element={<FavoritesView data={data} onOpen={openProduct} onAdd={addToCart} onNav={go} />} />
+            <Route path="/hesab" element={<AccountView onNav={go} />} />
+            <Route path="*" element={<HomePageWrapper data={data} go={go} addToCart={addToCart} />} />
+          </Routes>
+        </Suspense>
+      </main>
+      <Footer />
+      <Toast item={toast} />
+      <CookieBanner />
+      {lightbox && <Lightbox images={lightbox.images} index={lightbox.index} onClose={closeLightbox} onChange={(i) => setLightbox(lb => ({ ...lb, index: i }))} />}
+    </AppContext.Provider>
+  );
+}
+
+// Page wrappers with SEO titles
+function HomePageWrapper({ data, go, addToCart }) {
+  usePageMeta(null, 'RC DriveHub — Azərbaycanda RC maşınlar, ehtiyat hissələri və tuning.');
+  return <HomeView data={data} onNav={go} onAdd={addToCart} />;
+}
+function CatalogPageWrapper({ data, openProduct, addToCart }) {
+  usePageMeta('RC Modellər', 'RC maşın modelləri — Monster Truck, Crawler, Buggy, On-Road.');
+  return <div className="rc-light" style={{ background: 'var(--bg-page)', minHeight: '72vh', paddingBottom: 56 }}><CatalogView data={data} onOpen={openProduct} onAdd={addToCart} /></div>;
+}
+function FinderPageWrapper({ data, addToCart }) {
+  usePageMeta('Ehtiyat Hissələri', 'RC maşın ehtiyat hissələri — brend və model üzrə axtar.');
+  return <PartFinderView data={data} onAdd={addToCart} />;
+}
+function TuningPageWrapper({ data, addToCart }) {
+  usePageMeta('Tuning & Hissələr', 'RC tuning hissələri — təkərlər, elektronika, süspansiyon.');
+  return <TuningView data={data} onAdd={addToCart} />;
+}
+function BuilderPageWrapper({ addToCart }) {
+  usePageMeta('RC Builder', 'Öz RC maşınını sıfırdan yığ — konfiqurator.');
+  return <BuilderView onAdd={addToCart} />;
+}
+function SalePageWrapper({ data, openProduct, addToCart }) {
+  usePageMeta('Endirimlər', 'Endirimli RC modellər və ehtiyat hissələri.');
+  return <div className="rc-light" style={{ background: 'var(--bg-page)', minHeight: '72vh', paddingBottom: 56 }}><SaleView data={data} onOpen={openProduct} onAdd={addToCart} /></div>;
+}
+
+// JSON-LD Structured Data
+function StructuredData() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "RC DriveHub",
+    "url": "https://rchub.023.az",
+    "description": "Azərbaycanda RC maşınlar, ehtiyat hissələri və tuning məhsulları",
+    "potentialAction": { "@type": "SearchAction", "target": "https://rchub.023.az/modeller?q={search_term_string}", "query-input": "required name=search_term_string" }
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />;
+}
+
+export default function App() {
+  return (
     <ErrorBoundary>
-      <AppContext.Provider value={appCtx}>
-        {showSplash && <SplashScreen onEnter={enterSite} />}
-        <a href="#main-content" className="rc-skip-nav">Məzmuna keç</a>
-        <Header nav={NAV} current={view} onNav={go} cartCount={cartItems.reduce((s, c) => s + c.qty, 0)} onSearch={() => go('catalog')} />
-        <main id="main-content">
-          <Suspense fallback={<Loading />}>
-            {view === 'home' && <HomeView data={data} onNav={go} onAdd={addToCart} />}
-            {view === 'finder' && <PartFinderView data={data} onAdd={addToCart} />}
-            {view === 'tuning' && <TuningView data={data} onAdd={addToCart} />}
-            {view === 'builder' && <BuilderView onAdd={addToCart} />}
-            {['catalog','product','cart','favorites','account','sale'].includes(view) && (
-              <div className="rc-light" style={{ background: 'var(--bg-page)', minHeight: '72vh', paddingBottom: 56 }}>
-                {view === 'catalog' && <CatalogView data={data} onOpen={openProduct} onAdd={addToCart} />}
-                {view === 'sale' && <SaleView data={data} onOpen={openProduct} onAdd={addToCart} />}
-                {view === 'product' && <ProductView product={product} related={relatedProducts} onAdd={addToCart} onBack={() => go('catalog')} />}
-                {view === 'cart' && <CartView data={data} onNav={go} cartItems={cartItems} setCartItems={setCartItems} />}
-                {view === 'favorites' && <FavoritesView data={data} onOpen={openProduct} onAdd={addToCart} onNav={go} />}
-                {view === 'account' && <AccountView onNav={go} />}
-              </div>
-            )}
-          </Suspense>
-        </main>
-        <Footer />
-        <Toast item={toast} />
-        <CookieBanner />
-        {lightbox && <Lightbox images={lightbox.images} index={lightbox.index} onClose={closeLightbox} onChange={(i) => setLightbox(lb => ({ ...lb, index: i }))} />}
-      </AppContext.Provider>
+      <BrowserRouter>
+        <StructuredData />
+        <AppContent />
+      </BrowserRouter>
     </ErrorBoundary>
   );
 }

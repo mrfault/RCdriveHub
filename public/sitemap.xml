@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://rchub.023.az/</loc><priority>1.0</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://rchub.023.az/modeller</loc><priority>0.9</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://rchub.023.az/ehtiyat-hisseleri</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://rchub.023.az/tuning</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://rchub.023.az/rc-builder</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://rchub.023.az/endirimler</loc><priority>0.7</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://rchub.023.az/modeller/ara-kraton</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/axi-scx10</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/los-typhon</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/ta-apex2</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/ara-infraction</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/tko-et48</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/los-promoto</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/axi-capra</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/tra-slash</loc><priority>0.7</priority></url>
+  <url><loc>https://rchub.023.az/modeller/mug-mbx8</loc><priority>0.7</priority></url>
+</urlset>
