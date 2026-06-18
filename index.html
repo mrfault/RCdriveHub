@@ -95,6 +95,22 @@
 <script type="text/babel" src="js/AccountView.jsx"></script>
 
 <script type="text/babel">
+  class ErrorBoundary extends React.Component {
+    constructor(props) { super(props); this.state = { error: null }; }
+    static getDerivedStateFromError(error) { return { error }; }
+    render() {
+      if (this.state.error) return (
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
+          <h2 style={{ color: 'var(--flame-500)' }}>Xəta baş verdi</h2>
+          <p>{this.state.error.message}</p>
+          <button onClick={() => { this.setState({ error: null }); window.location.reload(); }}
+            style={{ padding: '10px 24px', background: 'var(--grad-flame)', color: '#fff', border: 'none', borderRadius: 6, marginTop: 16, cursor: 'pointer' }}>Yenidən yüklə</button>
+        </div>
+      );
+      return this.props.children;
+    }
+  }
+
   const NAV = [
     { id: 'catalog', label: 'Modellər' },
     { id: 'finder', label: 'Ehtiyat hissələri' },
@@ -273,7 +289,7 @@
     );
   }
 
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+  ReactDOM.createRoot(document.getElementById('app')).render(<ErrorBoundary><App /></ErrorBoundary>);
 </script>
 </body>
 </html>

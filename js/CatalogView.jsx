@@ -25,8 +25,29 @@ function CatalogView({ data, onOpen, onAdd }) {
   const [sel, setSel] = React.useState(() => new Set());
   const [sort, setSort] = React.useState('Populyar');
   const [sortOpen, setSortOpen] = React.useState(false);
+  const [visibleCount, setVisibleCount] = React.useState(10);
   const toggle = (id) => setSel(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
   const sorts = ['Populyar', 'Ən ucuz', 'Ən bahalı', 'Yeni gələnlər'];
+
+  // Close sort dropdown on outside click
+  React.useEffect(() => {
+    if (!sortOpen) return;
+    const close = () => setSortOpen(false);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, [sortOpen]);
+
+  // Filter products
+  const catFilters = [...sel].filter(id => data.categories.some(c => c.id === id));
+  const brandFilters = [...sel].filter(id => data.brands.includes(id));
+  let filtered = data.products.filter(p => {
+    if (catFilters.length > 0 && !catFilters.includes(p.cat)) return false;
+    if (brandFilters.length > 0 && !brandFilters.includes(p.brand)) return false;
+    return true;
+  });
+  // Sort
+  if (sort === 'Ən ucuz') filtered = [...filtered].sort((a,b) => parseFloat(a.price) - parseFloat(b.price));
+  if (sort === 'Ən bahalı') filtered = [...filtered].sort((a,b) => parseFloat(b.price) - parseFloat(a.price));
 
   return (
     <div className="rc-container" style={{ padding: '28px 0 0' }}>
@@ -60,7 +81,7 @@ function CatalogView({ data, onOpen, onAdd }) {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-muted)' }}>{data.products.length} nəticə</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-muted)' }}>{filtered.length} nəticə</span>
               {[...sel].slice(0, 4).map(id => <FilterChip key={id} active removable onRemove={() => toggle(id)}>{id}</FilterChip>)}
               {sel.size > 0 && <button onClick={() => setSel(new Set())} style={{ background: 'none', border: 'none', color: 'var(--flame-400)', fontSize: 12.5, fontWeight: 600 }}>Təmizlə</button>}
             </div>
@@ -80,15 +101,15 @@ function CatalogView({ data, onOpen, onAdd }) {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 18 }}>
-            {data.products.map(p => (
+            {filtered.slice(0, visibleCount).map(p => (
               <div key={p.id} onClick={() => onOpen(p)} style={{ cursor: 'pointer' }}>
                 <ProductCard {...p} onAdd={(e) => { onAdd(p); }} />
               </div>
             ))}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 36 }}>
-            <Button variant="outline" size="lg">DAHA ÇOX YÜKLƏ</Button>
+          {visibleCount < filtered.length && <div style={{ display: 'flex', justifyContent: 'center', marginTop: 36 }}>
+            <Button variant="outline" size="lg" onClick={() => setVisibleCount(c => c + 10)}>DAHA ÇOX YÜKLƏ</Button>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ function Gallery({ image }) {
         {image && <img src={image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
         <div aria-hidden="true" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 60%, var(--flame-soft), transparent 60%)' }} />
         {!image && <Icon name="truck" size={150} strokeWidth={0.9} color="var(--carbon-600)" style={{ position: 'relative' }} />}
-        <Badge tone="sale" solid cut style={{ position: 'absolute', top: 16, left: 16 }}>-13%</Badge>
+        {p.badge && <Badge tone={p.badge.tone} solid cut style={{ position: 'absolute', top: 16, left: 16 }}>{p.badge.label}</Badge>}
       </div>
     </div>
   );
@@ -43,8 +43,8 @@ function ProductView({ product, onAdd, onBack, related }) {
             <div style={{ display: 'flex', gap: 2 }}>
               {[0,1,2,3,4].map(i => <Icon key={i} name="star" size={16} strokeWidth={0} color={i < Math.round(p.rating) ? 'var(--volt-500)' : 'var(--carbon-700)'} style={{ fill: i < Math.round(p.rating) ? 'var(--volt-500)' : 'var(--carbon-700)' }} />)}
             </div>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12.5, color: 'var(--text-muted)' }}>{p.rating.toFixed(1)} · 128 rəy</span>
-            <Badge tone="stock" dot>STOKDA</Badge>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12.5, color: 'var(--text-muted)' }}>{p.rating.toFixed(1)} rəy</span>
+            {p.badge && <Badge tone={p.badge.tone} dot>{p.badge.label}</Badge>}
           </div>
 
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginTop: 22 }}>

@@ -31,7 +31,9 @@ const ICON_PATHS = {
 };
 
 function Icon({ name, size = 20, strokeWidth = 1.75, color, style, ...rest }) {
-  const inner = ICON_PATHS[name] || '';
+  // Only render from allowlisted ICON_PATHS — prevents XSS
+  const inner = ICON_PATHS.hasOwnProperty(name) ? ICON_PATHS[name] : '';
+  if (!inner) return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ display: 'block', flex: 'none', ...style }} aria-hidden="true" {...rest} />;
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke={color || 'currentColor'} strokeWidth={strokeWidth}
@@ -304,13 +306,13 @@ function Lightbox({ images, index, onClose, onChange }) {
   React.useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') onChange((idx - 1 + len) % len);
+      if (e.key === 'ArrowRight') onChange((idx + 1) % len);
     };
     window.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
     return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [idx]);
+  }, [idx, len, onClose, onChange]);
 
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'rc-rise 200ms var(--ease-power) both' }}>

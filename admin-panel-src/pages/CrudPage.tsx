@@ -129,14 +129,34 @@ export default function CrudPage({ resource, title }: CrudPageProps) {
   };
 
   const handleDelete = async (id: number) => {
-    await destroy(resource, id);
-    message.success('Uğurla silindi');
-    load(pagination.current);
+    try {
+      await destroy(resource, id);
+      message.success('Uğurla silindi');
+      load(pagination.current);
+    } catch (e: any) {
+      message.error(e.response?.data?.message || 'Silmə zamanı xəta baş verdi');
+    }
   };
 
   const exclude = ['id', 'created_at', 'updated_at', 'brand', 'category', 'images', 'lines', 'user', 'options', 'links'];
+  // Fallback fields when table is empty
+  const defaultFields: Record<string, string[]> = {
+    products: ['title','slug','brand_id','category_id','description','price','old_price','scale','speed','badge_tone','badge_label','rating','sku','stock_status','sort_order','is_active'],
+    parts: ['title','slug','brand_id','category_id','description','price','old_price','sku','fit','badge_tone','badge_label','sort_order','is_active'],
+    brands: ['name','slug','logo_url','is_featured','sort_order'],
+    categories: ['name','slug','type','icon','product_count','sort_order','is_active'],
+    orders: ['order_number','status','status_tone','status_label','tracking_step','tracking_code','subtotal','shipping','total'],
+    settings: ['key','value','type','group','label'],
+    'builder-steps': ['label','step_number','sort_order','is_active'],
+    'nav-items': ['label','route','color','lang','has_animation','sort_order','is_active'],
+    'hero-slides': ['type','url','sort_order','is_active'],
+    'footer-groups': ['title','sort_order'],
+    'reassurance-items': ['icon','title','subtitle','sort_order','is_active'],
+  };
   const firstRecord = data[0] || {};
-  const fieldKeys = Object.keys(firstRecord).filter(k => !exclude.includes(k));
+  const fieldKeys = Object.keys(firstRecord).length > 0
+    ? Object.keys(firstRecord).filter(k => !exclude.includes(k))
+    : (defaultFields[resource] || ['name','title','sort_order']);
 
   const columns = fieldKeys.slice(0, 8).map(key => {
     const col: any = { title: getLabel(key), dataIndex: key, key, ellipsis: true };

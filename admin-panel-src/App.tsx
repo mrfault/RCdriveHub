@@ -9,10 +9,21 @@ import SettingsPage from './pages/SettingsPage';
 import UsersPage from './pages/UsersPage';
 import './index.css';
 
-const isAuth = () => !!localStorage.getItem('rc_token');
-
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  return isAuth() ? <>{children}</> : <Navigate to="/login" replace />;
+  const [checking, setChecking] = useState(true);
+  const [valid, setValid] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('rc_token');
+    if (!token) { setChecking(false); return; }
+    import('./api/client').then(({ getMe }) => {
+      getMe().then(() => { setValid(true); setChecking(false); })
+        .catch(() => { localStorage.removeItem('rc_token'); localStorage.removeItem('rc_user'); setChecking(false); });
+    });
+  }, []);
+
+  if (checking) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><span>Yüklənir...</span></div>;
+  return valid ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
 export const ThemeContext = createContext<{ dark: boolean; toggle: () => void }>({ dark: false, toggle: () => {} });
