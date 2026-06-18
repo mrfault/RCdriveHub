@@ -81,7 +81,7 @@ function BuilderOptionCard({ opt, selected, onSelect, showImage }) {
       onMouseLeave={(e) => { if (!on) { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.transform = 'none'; }}}>
       {showImage && opt.image && (
         <div style={{ width: 80, height: 80, borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'var(--carbon-900)', flex: 'none' }}>
-          <img src={opt.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={opt.image} loading="lazy" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
       )}
       <div style={{ flex: 1 }}>
@@ -175,7 +175,7 @@ export default function BuilderView({ onAdd }) {
     <div>
       {/* Hero */}
       <section style={{ position: 'relative', overflow: 'hidden', background: 'var(--carbon-950)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <img src={RCIMG.heroAction} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.2 }} />
+        <img src={RCIMG.heroAction} loading="lazy" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.2 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(8,9,12,0.5) 0%, rgba(8,9,12,0.95) 100%)' }} />
         <div className="rc-container" style={{ position: 'relative', padding: 'clamp(40px,6vw,72px) 0 clamp(20px,3vw,32px)' }}>
           <div className="rc-eyebrow" style={{ marginBottom: 12 }}>KONFİQURATOR</div>

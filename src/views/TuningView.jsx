@@ -28,7 +28,7 @@ function TuningPartRow({ pt, onAdd }) {
       <div onClick={() => { if (pt.image) openLightbox([pt.image], 0); }}
         style={{ position: 'relative', width: 88, height: 88, borderRadius: 'var(--radius-md)', background: 'linear-gradient(180deg,#1c212c,#0c0e13)', display: 'grid', placeItems: 'center', flex: 'none', overflow: 'hidden', cursor: pt.image ? 'zoom-in' : 'default' }}>
         {pt.image
-          ? <img src={pt.image} alt={pt.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ? <img src={pt.image} loading="lazy" alt={pt.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           : <Icon name="wrench" size={26} color="var(--carbon-500)" />}
         {pt.badge && <Badge tone={pt.badge.tone} solid={pt.badge.tone === 'sale'} cut style={{ position: 'absolute', top: -6, left: -6 }}>{pt.badge.label}</Badge>}
       </div>
@@ -75,7 +75,7 @@ export default function TuningView({ data, onAdd }) {
     <div>
       {/* Hero */}
       <section style={{ position: 'relative', overflow: 'hidden', background: 'var(--carbon-950)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <img src={RCIMG.demo} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.25 }} />
+        <img src={RCIMG.demo} loading="lazy" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.25 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(8,9,12,0.92) 0%, rgba(8,9,12,0.6) 60%, rgba(8,9,12,0.3) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, opacity: 0.12, background: 'repeating-linear-gradient(115deg, transparent 0 30px, rgba(255,77,20,0.15) 30px 32px)' }} />
         <div className="rc-container" style={{ position: 'relative', padding: 'clamp(40px,6vw,72px) 0' }}>

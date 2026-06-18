@@ -54,9 +54,22 @@ export default function CatalogView({ data, onOpen, onAdd }) {
 
   return (
     <div className="rc-container" style={{ padding: '28px 0 0' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.06em', color: 'var(--text-faint)', marginBottom: 10 }}>
-        ANA SƏHİFƏ <span style={{ color: 'var(--carbon-600)' }}>/</span> RC FAHRZEUGE <span style={{ color: 'var(--flame-500)' }}>/ HAMISI</span>
-      </div>
+      <nav aria-label="Breadcrumb" style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.06em', color: 'var(--text-faint)', marginBottom: 10 }}>
+        <ol style={{ display: 'flex', gap: 6, listStyle: 'none', margin: 0, padding: 0 }}>
+          <li><a href="/" style={{ color: 'var(--text-faint)' }}>ANA SƏHİFƏ</a></li>
+          <li style={{ color: 'var(--carbon-600)' }}>/</li>
+          <li><a href="/modeller" style={{ color: 'var(--text-faint)' }}>RC MODELLƏR</a></li>
+          <li style={{ color: 'var(--carbon-600)' }}>/</li>
+          <li style={{ color: 'var(--flame-500)' }}>HAMISI</li>
+        </ol>
+      </nav>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org", "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Ana Səhifə", "item": "https://rchub.023.az/" },
+          { "@type": "ListItem", "position": 2, "name": "RC Modellər", "item": "https://rchub.023.az/modeller" },
+        ]
+      })}} />
       <h1 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 900, textTransform: 'uppercase', fontSize: 'clamp(2rem,4vw,3rem)', lineHeight: 0.95, color: 'var(--text-strong)', marginBottom: 22 }}>RC MODELLƏR</h1>
 
       <div className="rc-catalog-wrap" style={{ display: 'grid', gridTemplateColumns: '252px 1fr', gap: 32, alignItems: 'start' }}>

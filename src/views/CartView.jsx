@@ -6,7 +6,7 @@ function CartRow({ item, onQty, onRemove }) {
   return (
     <div style={{ display: 'flex', gap: 16, padding: '16px 0', borderBottom: '1px solid var(--border-subtle)' }}>
       <div style={{ width: 96, height: 96, borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'linear-gradient(180deg,#1c212c,#0c0e13)', flex: 'none', display: 'grid', placeItems: 'center' }}>
-        {item.image ? <img src={item.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <Icon name="truck" size={30} color="var(--carbon-600)" />}
+        {item.image ? <img src={item.image} loading="lazy" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <Icon name="truck" size={30} color="var(--carbon-600)" />}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10 }}>

@@ -12,13 +12,13 @@ function Gallery({ image, badge }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {[0,1,2,3].map(i => (
           <button type="button" key={i} onClick={() => setActive(i)} style={{ aspectRatio: '1', borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'linear-gradient(180deg,#1c212c,#0c0e13)', border: `1px solid ${active===i ? 'var(--flame-500)' : 'var(--border-subtle)'}`, padding: 0, display: 'grid', placeItems: 'center', transition: 'border-color var(--dur-fast)' }}>
-            {image ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: active===i ? 'none' : 'grayscale(0.4) brightness(0.8)' }} /> : <Icon name="truck" size={26} strokeWidth={1.2} color="var(--carbon-600)" />}
+            {image ? <img src={image} loading="lazy" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: active===i ? 'none' : 'grayscale(0.4) brightness(0.8)' }} /> : <Icon name="truck" size={26} strokeWidth={1.2} color="var(--carbon-600)" />}
           </button>
         ))}
       </div>
       <div onClick={() => { if (image) openLightbox([image, image, image, image], active); }}
         style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 'var(--radius-xl)', background: 'radial-gradient(120% 100% at 50% 0%, #1d212c 0%, #0c0e13 100%)', border: '1px solid var(--border-subtle)', display: 'grid', placeItems: 'center', overflow: 'hidden', cursor: image ? 'zoom-in' : 'default' }}>
-        {image && <img src={image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
+        {image && <img src={image} loading="lazy" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
         <div aria-hidden="true" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 60%, var(--flame-soft), transparent 60%)' }} />
         {!image && <Icon name="truck" size={150} strokeWidth={0.9} color="var(--carbon-600)" style={{ position: 'relative' }} />}
         {badge && <Badge tone={badge.tone} solid cut style={{ position: 'absolute', top: 16, left: 16 }}>{badge.label}</Badge>}

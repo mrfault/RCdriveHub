@@ -262,7 +262,7 @@ export function ProductCard({ image, title, brand, price, oldPrice, badge, ratin
       style={{ position: 'relative', background: 'var(--surface-card)', border: `1px solid ${hover ? 'var(--border-flame)' : 'var(--border-subtle)'}`, borderRadius: 'var(--radius-lg)', overflow: 'hidden', transform: hover ? 'translateY(-6px)' : 'none', boxShadow: hover ? 'var(--shadow-lg)' : 'var(--shadow-card)', transition: 'transform var(--dur-base) var(--ease-power), box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out)', ...style }} {...rest}>
       <div style={{ position: 'relative', aspectRatio: '4 / 3', background: 'radial-gradient(120% 100% at 50% 0%, #1d212c 0%, #0c0e13 100%)', overflow: 'hidden', cursor: image ? 'zoom-in' : 'default' }}
         onClick={(e) => { if (image) { e.stopPropagation(); openLightbox([image], 0); } }}>
-        {image ? <img src={image} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: hover ? 'scale(1.07)' : 'scale(1)', transition: 'transform var(--dur-slow) var(--ease-power)' }} />
+        {image ? <img src={image} loading="lazy" alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: hover ? 'scale(1.07)' : 'scale(1)', transition: 'transform var(--dur-slow) var(--ease-power)' }} />
           : <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--carbon-600)' }}><Icon name="truck" size={48} strokeWidth={1.25} /></div>}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, transparent 40%, rgba(255,77,20,0.18) 50%, transparent 60%)', transform: hover ? 'translateX(0)' : 'translateX(-120%)', transition: 'transform var(--dur-slow) var(--ease-out)', pointerEvents: 'none' }} />
         {badge && <div style={{ position: 'absolute', top: 10, left: 10 }}><Badge tone={badge.tone} solid={badge.tone === 'sale'} cut>{badge.label}</Badge></div>}
@@ -351,7 +351,7 @@ export function Lightbox({ images, index, onClose, onChange }) {
           {images.map((img, i) => (
             <button type="button" key={i} onClick={(e) => { e.stopPropagation(); onChange(i); }}
               style={{ width: 56, height: 42, borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: `2px solid ${i === idx ? 'var(--flame-500)' : 'rgba(255,255,255,0.15)'}`, padding: 0, opacity: i === idx ? 1 : 0.5, transition: 'opacity 150ms, border-color 150ms' }}>
-              <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={img} loading="lazy" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </button>
           ))}
         </div>
