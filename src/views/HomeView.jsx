@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon, Button, ProductCard, Badge } from "../components/index.jsx";
 import { Reassurance, BrandMarquee } from "../components/chrome.jsx";
+import { RCIMG } from "../data.js";
 
 
 export function SectionHead({ eyebrow, title, action, onAction }) {

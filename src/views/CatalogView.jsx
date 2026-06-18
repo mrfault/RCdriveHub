@@ -48,8 +48,9 @@ export default function CatalogView({ data, onOpen, onAdd }) {
     return true;
   });
   // Sort
-  if (sort === 'Ən ucuz') filtered = [...filtered].sort((a,b) => parseFloat(a.price) - parseFloat(b.price));
-  if (sort === 'Ən bahalı') filtered = [...filtered].sort((a,b) => parseFloat(b.price) - parseFloat(a.price));
+  const parsePrice = (s) => parseFloat(String(s).replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+  if (sort === 'Ən ucuz') filtered = [...filtered].sort((a,b) => parsePrice(a.price) - parsePrice(b.price));
+  if (sort === 'Ən bahalı') filtered = [...filtered].sort((a,b) => parsePrice(b.price) - parsePrice(a.price));
 
   return (
     <div className="rc-container" style={{ padding: '28px 0 0' }}>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon, Button, Badge, FilterChip, SearchBar } from "../components/index.jsx";
 import { SectionHead } from "./HomeView.jsx";
+import { RCIMG } from "../data.js";
 
 
 function TuningCategoryCard({ cat, onClick }) {

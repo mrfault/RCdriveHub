@@ -1,10 +1,12 @@
 import React from "react";
 import { Icon, Button, Badge, Tabs, SpecRow, QuantityStepper, ProductCard } from "../components/index.jsx";
+import { useApp } from "../AppContext.jsx";
 import { SectionHead } from "./HomeView.jsx";
 
 
-function Gallery({ image }) {
+function Gallery({ image, badge }) {
   const [active, setActive] = React.useState(0);
+  const { openLightbox } = useApp();
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr', gap: 10 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -14,12 +16,12 @@ function Gallery({ image }) {
           </button>
         ))}
       </div>
-      <div onClick={() => { if (image && window._openLightbox) window._openLightbox([image, image, image, image], active); }}
+      <div onClick={() => { if (image) openLightbox([image, image, image, image], active); }}
         style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 'var(--radius-xl)', background: 'radial-gradient(120% 100% at 50% 0%, #1d212c 0%, #0c0e13 100%)', border: '1px solid var(--border-subtle)', display: 'grid', placeItems: 'center', overflow: 'hidden', cursor: image ? 'zoom-in' : 'default' }}>
         {image && <img src={image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
         <div aria-hidden="true" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 60%, var(--flame-soft), transparent 60%)' }} />
         {!image && <Icon name="truck" size={150} strokeWidth={0.9} color="var(--carbon-600)" style={{ position: 'relative' }} />}
-        {p.badge && <Badge tone={p.badge.tone} solid cut style={{ position: 'absolute', top: 16, left: 16 }}>{p.badge.label}</Badge>}
+        {badge && <Badge tone={badge.tone} solid cut style={{ position: 'absolute', top: 16, left: 16 }}>{badge.label}</Badge>}
       </div>
     </div>
   );
@@ -37,7 +39,7 @@ export default function ProductView({ product, onAdd, onBack, related }) {
       </button>
 
       <div className="rc-product-grid" style={{ display: 'grid', alignItems: 'start' }}>
-        <Gallery image={p.image} />
+        <Gallery image={p.image} badge={p.badge} />
         <div>
           <div className="rc-eyebrow" style={{ marginBottom: 10 }}>{p.brand} · {p.scale}</div>
           <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 800, fontSize: 'clamp(1.6rem, 2.6vw, 2.2rem)', lineHeight: 1.1, color: 'var(--text-strong)' }}>{p.title}</h1>

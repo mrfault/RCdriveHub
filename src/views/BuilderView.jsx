@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon, Button, Badge, FilterChip, SearchBar } from "../components/index.jsx";
 import { SectionHead } from "./HomeView.jsx";
+import { RCIMG } from "../data.js";
 
 
 const BUILDER_STEPS = [
@@ -154,18 +155,16 @@ export default function BuilderView({ onAdd }) {
   const [selections, setSelections] = React.useState({});
 
   const select = (opt) => {
-    setSelections(prev => {
-      const next = { ...prev, [step]: opt };
-      // Auto-advance to next incomplete step using fresh state
-      const idx = BUILDER_STEPS.findIndex(s => s.id === step);
-      for (let i = idx + 1; i < BUILDER_STEPS.length; i++) {
-        if (!next[BUILDER_STEPS[i].id]) {
-          setTimeout(() => setStep(BUILDER_STEPS[i].id), 300);
-          break;
-        }
+    const next = { ...selections, [step]: opt };
+    setSelections(next);
+    // Auto-advance to next incomplete step
+    const idx = BUILDER_STEPS.findIndex(s => s.id === step);
+    for (let i = idx + 1; i < BUILDER_STEPS.length; i++) {
+      if (!next[BUILDER_STEPS[i].id]) {
+        setTimeout(() => setStep(BUILDER_STEPS[i].id), 300);
+        return;
       }
-      return next;
-    });
+    }
   };
 
   const reset = () => { setSelections({}); setStep('base'); };

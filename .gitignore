@@ -1,4 +1,29 @@
-.DS_Store
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Environment
+.env
+.env.*
+*.local
+
+# Secrets
 serverdetails.js
 tmp_seeder.php
 tmp_nginx.conf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

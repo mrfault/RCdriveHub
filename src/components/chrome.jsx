@@ -1,5 +1,6 @@
 import React from "react";
-import { Icon, IconButton, Logo, SearchBar, Button } from "../components/index.jsx";
+import { Icon, IconButton, Logo, SearchBar, Button } from "./index.jsx";
+import { useApp } from "../AppContext.jsx";
 
 
 export function TopBar() {
@@ -38,6 +39,7 @@ export function MobileMenu({ nav, current, onNav, onClose }) {
 
 export function Header({ nav, current, onNav, cartCount, onSearch }) {
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const { musicPlaying, toggleMusic } = useApp();
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50 }}>
       <TopBar />
@@ -72,8 +74,8 @@ export function Header({ nav, current, onNav, cartCount, onSearch }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 'auto' }}>
             {/* Music toggle — desktop only */}
-            <button type="button" onClick={() => window._toggleMusic && window._toggleMusic()} aria-label="Musiqi"
-              className={(window._musicPlaying ? 'rc-eq-playing' : 'rc-eq-paused') + ' rc-hide-sm'}
+            <button type="button" onClick={toggleMusic} aria-label="Musiqi"
+              className={(musicPlaying ? 'rc-eq-playing' : 'rc-eq-paused') + ' rc-hide-sm'}
               style={{ width: 40, height: 40, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, background: 'none', border: '1px solid transparent', borderRadius: 'var(--radius-md)', transition: 'background var(--dur-base)' }}
               onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-hover)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'none'}>

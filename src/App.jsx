@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import { RCDATA, RCIMG } from './data.js';
 import { Icon, Lightbox, Logo } from './components/index.jsx';
 import { Header, Footer } from './components/chrome.jsx';
+import { AppContext } from './AppContext.jsx';
 import HomeView from './views/HomeView.jsx';
 import nfsSrc from './assets/nfs.mp3';
 
-// Lazy load non-critical views
 const CatalogView = lazy(() => import('./views/CatalogView.jsx'));
 const ProductView = lazy(() => import('./views/ProductView.jsx'));
 const PartFinderView = lazy(() => import('./views/PartFinderView.jsx'));
@@ -16,10 +16,6 @@ const AccountView = lazy(() => import('./views/AccountView.jsx'));
 const TuningView = lazy(() => import('./views/TuningView.jsx'));
 const BuilderView = lazy(() => import('./views/BuilderView.jsx'));
 
-// Make data globally available for components that use RCIMG/RCDATA
-window.RCIMG = RCIMG;
-window.RCDATA = RCDATA;
-
 const NAV = [
   { id: 'catalog', label: 'Modellər' },
   { id: 'finder', label: 'Ehtiyat hissələri' },
@@ -28,7 +24,6 @@ const NAV = [
   { id: 'sale', label: 'Endirimlər' },
 ];
 
-// Error Boundary
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null }; }
   static getDerivedStateFromError(error) { return { error }; }
@@ -45,7 +40,6 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Splash Screen
 function SplashScreen({ onEnter }) {
   return (
     <div onClick={onEnter} style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'var(--carbon-950)', display: 'flex', flexDirection: 'column', cursor: 'pointer', animation: 'rc-rise 500ms var(--ease-power) both' }}>
@@ -56,16 +50,10 @@ function SplashScreen({ onEnter }) {
         </h2>
         <div className="rc-float" style={{ marginTop: 36 }}>
           <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-            <circle cx="50" cy="50" r="48" stroke="var(--flame-500)" strokeWidth="1" opacity="0.15">
-              <animate attributeName="r" values="44;48;44" dur="2s" repeatCount="indefinite" />
-            </circle>
+            <circle cx="50" cy="50" r="48" stroke="var(--flame-500)" strokeWidth="1" opacity="0.15"><animate attributeName="r" values="44;48;44" dur="2s" repeatCount="indefinite" /></circle>
             <path d="M 15 65 A 40 40 0 1 1 85 65" stroke="var(--carbon-700)" strokeWidth="6" strokeLinecap="round" fill="none" />
-            <path d="M 15 65 A 40 40 0 1 1 85 65" stroke="url(#splashGaugeGrad)" strokeWidth="6" strokeLinecap="round" fill="none" strokeDasharray="200" strokeDashoffset="200">
-              <animate attributeName="stroke-dashoffset" values="200;40;200" dur="2.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" />
-            </path>
-            <line x1="50" y1="50" x2="50" y2="22" stroke="var(--flame-500)" strokeWidth="3" strokeLinecap="round">
-              <animateTransform attributeName="transform" type="rotate" values="-50 50 50;60 50 50;-50 50 50" dur="2.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" />
-            </line>
+            <path d="M 15 65 A 40 40 0 1 1 85 65" stroke="url(#splashGaugeGrad)" strokeWidth="6" strokeLinecap="round" fill="none" strokeDasharray="200" strokeDashoffset="200"><animate attributeName="stroke-dashoffset" values="200;40;200" dur="2.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" /></path>
+            <line x1="50" y1="50" x2="50" y2="22" stroke="var(--flame-500)" strokeWidth="3" strokeLinecap="round"><animateTransform attributeName="transform" type="rotate" values="-50 50 50;60 50 50;-50 50 50" dur="2.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" /></line>
             <circle cx="50" cy="50" r="6" fill="var(--carbon-800)" stroke="var(--flame-500)" strokeWidth="2" />
             <circle cx="50" cy="50" r="2.5" fill="var(--flame-500)"><animate attributeName="r" values="2;3;2" dur="1s" repeatCount="indefinite" /></circle>
             <text x="50" y="72" textAnchor="middle" fill="var(--text-faint)" fontSize="9" fontFamily="var(--font-mono)" fontWeight="700">KM/S</text>
@@ -78,7 +66,6 @@ function SplashScreen({ onEnter }) {
   );
 }
 
-// Cookie Banner
 function CookieBanner() {
   const [visible, setVisible] = useState(() => !localStorage.getItem('rc_cookies'));
   if (!visible) return null;
@@ -87,9 +74,7 @@ function CookieBanner() {
       <div className="rc-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, padding: '16px 0', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 260 }}>
           <Icon name="shield" size={20} color="var(--flame-400)" style={{ flex: 'none' }} />
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-            Bu sayt təcrübənizi yaxşılaşdırmaq üçün cookies istifadə edir.
-          </p>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5 }}>Bu sayt təcrübənizi yaxşılaşdırmaq üçün cookies istifadə edir.</p>
         </div>
         <div style={{ display: 'flex', gap: 10, flex: 'none' }}>
           <button type="button" onClick={() => { localStorage.setItem('rc_cookies', 'denied'); setVisible(false); }}
@@ -102,7 +87,6 @@ function CookieBanner() {
   );
 }
 
-// Toast
 function Toast({ item }) {
   if (!item) return null;
   return (
@@ -116,14 +100,13 @@ function Toast({ item }) {
   );
 }
 
-// Loading fallback
 const Loading = () => <div style={{ display: 'flex', justifyContent: 'center', padding: 60, color: 'var(--text-faint)' }}>Yüklənir...</div>;
 
 export default function App() {
   const data = RCDATA;
   const [view, setView] = useState('home');
   const [product, setProduct] = useState(data.products[0]);
-  const [cart, setCart] = useState(2);
+  const [cart, setCart] = useState(0);
   const [toast, setToast] = useState(null);
   const [lightbox, setLightbox] = useState(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
@@ -131,7 +114,7 @@ export default function App() {
   const audioRef = useRef(null);
   const tRef = useRef();
 
-  // Audio init — only desktop + cookies accepted
+  // Audio init
   useEffect(() => {
     if (window.innerWidth <= 768) return;
     if (localStorage.getItem('rc_cookies') !== 'accepted') return;
@@ -142,60 +125,71 @@ export default function App() {
     return () => { a.pause(); };
   }, []);
 
-  const toggleMusic = () => {
+  // Toast cleanup on unmount
+  useEffect(() => {
+    return () => clearTimeout(tRef.current);
+  }, []);
+
+  const toggleMusic = useCallback(() => {
     const a = audioRef.current;
     if (!a) return;
     if (musicPlaying) { a.pause(); setMusicPlaying(false); }
     else { a.play().then(() => setMusicPlaying(true)).catch(() => {}); }
-  };
+  }, [musicPlaying]);
 
-  // Expose for components that need it
-  window._musicPlaying = musicPlaying;
-  window._toggleMusic = toggleMusic;
-  window._openLightbox = (images, index) => setLightbox({ images, index: index || 0 });
+  const openLightbox = useCallback((images, index) => {
+    setLightbox({ images, index: index || 0 });
+  }, []);
 
-  const addToCart = (item, qty = 1) => {
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+
+  const addToCart = useCallback((item, qty = 1) => {
     setCart(c => c + qty);
     setToast(item);
     clearTimeout(tRef.current);
     tRef.current = setTimeout(() => setToast(null), 2600);
-  };
-  const go = (v) => { setView(v); window.scrollTo({ top: 0, behavior: 'instant' }); };
-  const openProduct = (p) => { setProduct(p); go('product'); };
+  }, []);
 
-  const enterSite = () => {
+  const go = useCallback((v) => { setView(v); window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+  const openProduct = useCallback((p) => { setProduct(p); go('product'); }, [go]);
+
+  const enterSite = useCallback(() => {
     setShowSplash(false);
     const a = audioRef.current;
     if (a) a.play().then(() => setMusicPlaying(true)).catch(() => {});
-  };
+  }, []);
+
+  const appCtx = { musicPlaying, toggleMusic, openLightbox };
 
   return (
     <ErrorBoundary>
-      {showSplash && <SplashScreen onEnter={enterSite} />}
-      <a href="#main-content" className="rc-skip-nav">Məzmuna keç</a>
-      <Header nav={NAV} current={view} onNav={go} cartCount={cart} onSearch={() => go('catalog')} />
-      <main id="main-content">
-        <Suspense fallback={<Loading />}>
-          {view === 'home' && <HomeView data={data} onNav={go} onAdd={addToCart} />}
-          {view === 'finder' && <PartFinderView data={data} onAdd={addToCart} />}
-          {view === 'tuning' && <TuningView data={data} onAdd={addToCart} />}
-          {view === 'builder' && <BuilderView onAdd={addToCart} />}
-          {['catalog','product','cart','favorites','account','sale'].includes(view) && (
-            <div className="rc-light" style={{ background: 'var(--bg-page)', minHeight: '72vh', paddingBottom: 56 }}>
-              {view === 'catalog' && <CatalogView data={data} onOpen={openProduct} onAdd={addToCart} />}
-              {view === 'sale' && <SaleView data={data} onOpen={openProduct} onAdd={addToCart} />}
-              {view === 'product' && <ProductView product={product} related={[...data.products, ...data.parts]} onAdd={addToCart} onBack={() => go('catalog')} />}
-              {view === 'cart' && <CartView data={data} onNav={go} />}
-              {view === 'favorites' && <FavoritesView data={data} onOpen={openProduct} onAdd={addToCart} onNav={go} />}
-              {view === 'account' && <AccountView onNav={go} />}
-            </div>
-          )}
-        </Suspense>
-      </main>
-      <Footer />
-      <Toast item={toast} />
-      <CookieBanner />
-      {lightbox && <Lightbox images={lightbox.images} index={lightbox.index} onClose={() => setLightbox(null)} onChange={(i) => setLightbox(lb => ({ ...lb, index: i }))} />}
+      <AppContext.Provider value={appCtx}>
+        {showSplash && <SplashScreen onEnter={enterSite} />}
+        <a href="#main-content" className="rc-skip-nav">Məzmuna keç</a>
+        <Header nav={NAV} current={view} onNav={go} cartCount={cart} onSearch={() => go('catalog')} />
+        <main id="main-content">
+          <Suspense fallback={<Loading />}>
+            {view === 'home' && <HomeView data={data} onNav={go} onAdd={addToCart} />}
+            {view === 'finder' && <PartFinderView data={data} onAdd={addToCart} />}
+            {view === 'tuning' && <TuningView data={data} onAdd={addToCart} />}
+            {view === 'builder' && <BuilderView onAdd={addToCart} />}
+            {['catalog','product','cart','favorites','account','sale'].includes(view) && (
+              <div className="rc-light" style={{ background: 'var(--bg-page)', minHeight: '72vh', paddingBottom: 56 }}>
+                {view === 'catalog' && <CatalogView data={data} onOpen={openProduct} onAdd={addToCart} />}
+                {view === 'sale' && <SaleView data={data} onOpen={openProduct} onAdd={addToCart} />}
+                {view === 'product' && <ProductView product={product} related={[...data.products, ...data.parts]} onAdd={addToCart} onBack={() => go('catalog')} />}
+                {view === 'cart' && <CartView data={data} onNav={go} />}
+                {view === 'favorites' && <FavoritesView data={data} onOpen={openProduct} onAdd={addToCart} onNav={go} />}
+                {view === 'account' && <AccountView onNav={go} />}
+              </div>
+            )}
+          </Suspense>
+        </main>
+        <Footer />
+        <Toast item={toast} />
+        <CookieBanner />
+        {lightbox && <Lightbox images={lightbox.images} index={lightbox.index} onClose={closeLightbox} onChange={(i) => setLightbox(lb => ({ ...lb, index: i }))} />}
+      </AppContext.Provider>
     </ErrorBoundary>
   );
 }

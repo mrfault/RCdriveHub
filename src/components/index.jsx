@@ -1,4 +1,5 @@
 import React from "react";
+import { useApp } from "../AppContext.jsx";
 /* RC HUB — Design System Components
    Icon, Badge, Button, IconButton, Logo, SearchBar, FilterChip,
    Tabs, QuantityStepper, SpecRow, ProductCard */
@@ -33,7 +34,7 @@ const ICON_PATHS = {
 
 export function Icon({ name, size = 20, strokeWidth = 1.75, color, style, ...rest }) {
   // Only render from allowlisted ICON_PATHS — prevents XSS
-  const inner = ICON_PATHS.hasOwnProperty(name) ? ICON_PATHS[name] : '';
+  const inner = Object.hasOwn(ICON_PATHS, name) ? ICON_PATHS[name] : '';
   if (!inner) return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ display: 'block', flex: 'none', ...style }} aria-hidden="true" {...rest} />;
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -255,11 +256,12 @@ export function SpecRow({ label, value, icon, accent = false, style, ...rest }) 
 /* ---- ProductCard ---- */
 export function ProductCard({ image, title, brand, price, oldPrice, badge, rating, scale, onAdd, style, ...rest }) {
   const [hover, setHover] = React.useState(false);
+  const { openLightbox } = useApp();
   return (
     <article onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
       style={{ position: 'relative', background: 'var(--surface-card)', border: `1px solid ${hover ? 'var(--border-flame)' : 'var(--border-subtle)'}`, borderRadius: 'var(--radius-lg)', overflow: 'hidden', transform: hover ? 'translateY(-6px)' : 'none', boxShadow: hover ? 'var(--shadow-lg)' : 'var(--shadow-card)', transition: 'transform var(--dur-base) var(--ease-power), box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out)', ...style }} {...rest}>
       <div style={{ position: 'relative', aspectRatio: '4 / 3', background: 'radial-gradient(120% 100% at 50% 0%, #1d212c 0%, #0c0e13 100%)', overflow: 'hidden', cursor: image ? 'zoom-in' : 'default' }}
-        onClick={(e) => { if (image && window._openLightbox) { e.stopPropagation(); window._openLightbox([image], 0); } }}>
+        onClick={(e) => { if (image) { e.stopPropagation(); openLightbox([image], 0); } }}>
         {image ? <img src={image} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: hover ? 'scale(1.07)' : 'scale(1)', transition: 'transform var(--dur-slow) var(--ease-power)' }} />
           : <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--carbon-600)' }}><Icon name="truck" size={48} strokeWidth={1.25} /></div>}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, transparent 40%, rgba(255,77,20,0.18) 50%, transparent 60%)', transform: hover ? 'translateX(0)' : 'translateX(-120%)', transition: 'transform var(--dur-slow) var(--ease-out)', pointerEvents: 'none' }} />
